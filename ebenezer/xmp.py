@@ -6,7 +6,7 @@ RETAILER_KEY = 'Xmp.ebenezer.Retailer'
 
 pyexiv2.xmp.register_namespace('http://mornie.org/xmp/ebenezer/', 'ebenezer')
 
-class XMPMetadata(object):
+class XMPReceiptMetadata(object):
 
     def __init__(self, file):
         self._metadata = pyexiv2.ImageMetadata(file)

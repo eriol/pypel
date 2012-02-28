@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import argparse
 
-from ebenezer.xmp import XMPMetadata
+from ebenezer.xmp import XMPReceiptMetadata
 
 def main():
     parser = argparse.ArgumentParser(description='Easy receipts management.')
@@ -18,7 +18,7 @@ def main():
     price_sum = 0
 
     for receipt in args.receipts:
-        metadata = XMPMetadata(receipt)
+        metadata = XMPReceiptMetadata(receipt)
 
         if args.price is not None:
             metadata.price = args.price
