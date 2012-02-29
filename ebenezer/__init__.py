@@ -62,7 +62,9 @@ def main():
             if args.retailer:
                 metadata.retailer = args.retailer
         elif args.command_name == 'show':
-            table.append((receipt, metadata.price, metadata.retailer))
+            table.append(dict(receipt=receipt,
+                              price=metadata.price,
+                              retailer=metadata.retailer))
             max_len_receipt_filename = max([len(receipt),
                                             max_len_receipt_filename])
             max_len_price = max([len(str(metadata.price)), max_len_price])
@@ -72,15 +74,15 @@ def main():
 
     if args.command_name == 'show':
         for row in table:
-            if row[1] is None:
+            if row['price'] is None:
                 price_fmt = '{2:{3}}'
             else:
                 price_fmt = '{2:{3}.2f}'
-            fmt_str = '{0:{1}} -- '+ price_fmt +' -- {4}'
-            print(fmt_str.format(row[0],
+            fmt_str = '{0:{1}} -- ' + price_fmt + ' -- {4}'
+            print(fmt_str.format(row['receipt'],
                                  max_len_receipt_filename,
-                                 row[1],
+                                 row['price'],
                                  max_len_price,
-                                 row[2]))
+                                 row['retailer']))
     elif args.command_name == 'sum':
         print('{0:.2f}'.format(price_sum))
