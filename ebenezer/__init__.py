@@ -16,6 +16,7 @@ def main():
     args = parser.parse_args()
 
     price_sum = 0
+    max_len_receipt_filename = max([len(receipt) for receipt in args.receipts])
 
     for receipt in args.receipts:
         metadata = XMPReceiptMetadata(receipt)
@@ -30,9 +31,10 @@ def main():
             price_sum += metadata.price
 
         if args.price is None and not args.retailer and not args.sum:
-            print('{0} -- {1} -- {2}'.format(receipt,
-                                             metadata.price,
-                                             metadata.retailer))
+            print('{0:{1}} -- {2:.2f} -- {3}'.format(receipt,
+                                                     max_len_receipt_filename,
+                                                     metadata.price,
+                                                     metadata.retailer))
 
     if args.sum:
-        print('Total: {0}'.format(price_sum))
+        print('{0:.2f}'.format(price_sum))
