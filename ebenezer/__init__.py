@@ -44,6 +44,14 @@ def main():
     for receipt in args.receipts:
         metadata = XMPReceiptMetadata(receipt)
 
+        if args.command_name == 'del':
+            if not args.price and not args.retailer:
+                del metadata.price
+                del metadata.retailer
+            elif args.price:
+                del metadata.price
+            elif args.retailer:
+                del metadata.retailer
         if args.command_name == 'set':
             if args.price is None and args.retailer is None:
                 set_parser.error('You must provide at least --price '
@@ -64,11 +72,15 @@ def main():
 
     if args.command_name == 'show':
         for row in table:
-            print('{0:{1}} -- {2:{3}.2f} -- {4}'.format(
-                row[0],
-                max_len_receipt_filename,
-                row[1],
-                max_len_price,
-                row[2]))
+            if row[1] is None:
+                price_fmt = '{2:{3}}'
+            else:
+                price_fmt = '{2:{3}.2f}'
+            fmt_str = '{0:{1}} -- '+ price_fmt +' -- {4}'
+            print(fmt_str.format(row[0],
+                                 max_len_receipt_filename,
+                                 row[1],
+                                 max_len_price,
+                                 row[2]))
     elif args.command_name == 'sum':
         print('{0:.2f}'.format(price_sum))

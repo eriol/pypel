@@ -26,7 +26,10 @@ class XMPReceiptMetadata(object):
 
     @price.deleter
     def price(self):
-        del self._metadata[PRICE_KEY]
+        try:
+            del self._metadata[PRICE_KEY]
+        except KeyError:
+            pass
         self._metadata.write()
 
     @property
@@ -43,5 +46,8 @@ class XMPReceiptMetadata(object):
 
     @retailer.deleter
     def retailer(self):
-        del self._metadata[RETAILER_KEY]
+        try:
+            del self._metadata[RETAILER_KEY]
+        except KeyError:
+            pass
         self._metadata.write()
