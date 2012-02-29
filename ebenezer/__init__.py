@@ -5,36 +5,70 @@ from ebenezer.xmp import XMPReceiptMetadata
 
 def main():
     parser = argparse.ArgumentParser(description='Easy receipts management.')
-    parser.add_argument('-s', '--sum', action='store_true',
-                        help='sum receipts\' price')
-    parser.add_argument('-p', '--price', action='store', type=float,
-                        help='receipt\'s price')
-    parser.add_argument('-r', '--retailer', action='store', type=str,
-                        help='show receipt\'s retailer')
-    parser.add_argument('receipts', metavar='receipt', nargs='+',
-                        help='a receipt in a supported format')
+    subparsers = parser.add_subparsers(dest='command_name', help='commands')
+
+    # A show command
+    show_parser = subparsers.add_parser('show', help='Show receipt\'s metadata')
+    show_parser.add_argument('-s', '--sum', action='store_true',
+                             help='sum receipts\' price')
+    # A set command
+    set_parser = subparsers.add_parser('set', help='Set receipt\'s metadata')
+    set_parser.add_argument('-p', '--price', action='store', type=float,
+                            help='set receipt\'s price')
+    set_parser.add_argument('-r', '--retailer', action='store', type=str,
+                            help='set receipt\'s retailer')
+    # A delete command
+    del_parser = subparsers.add_parser('del', help='Delete receipt\'s metadata')
+    del_parser.add_argument('-p', '--price', action='store_true',
+                            help='delete receipt\'s price')
+    del_parser.add_argument('-r', '--retailer', action='store_true',
+                            help='delete receipt\'s retailer')
+
+    # A sum command
+    sum_parser = subparsers.add_parser('sum', help='Sum receipts\' price')
+
+    # HACK: This can be fixed when http://bugs.python.org/issue9540 will be
+    # closed.
+    for subparser in (show_parser, set_parser, del_parser, sum_parser):
+        subparser.add_argument('receipts', metavar='receipt', nargs='+',
+                               help='one or more receipts in a supported '
+                                    'format')
+
     args = parser.parse_args()
 
+    table = []
     price_sum = 0
-    max_len_receipt_filename = max([len(receipt) for receipt in args.receipts])
+    max_len_receipt_filename = 0
+    max_len_price = 0
 
     for receipt in args.receipts:
         metadata = XMPReceiptMetadata(receipt)
 
-        if args.price is not None:
-            metadata.price = args.price
+        if args.command_name == 'set':
+            if args.price is None and args.retailer is None:
+                set_parser.error('You must provide at least --price '
+                                 'or --retailer.')
+            if args.price:
+                metadata.price = args.price
 
-        if args.retailer:
-            metadata.retailer = args.retailer
+            if args.retailer:
+                metadata.retailer = args.retailer
+        elif args.command_name == 'show':
+            table.append((receipt, metadata.price, metadata.retailer))
+            max_len_receipt_filename = max([len(receipt),
+                                            max_len_receipt_filename])
+            max_len_price = max([len(str(metadata.price)), max_len_price])
 
-        if args.sum:
+        elif args.command_name == 'sum':
             price_sum += metadata.price
 
-        if args.price is None and not args.retailer and not args.sum:
-            print('{0:{1}} -- {2:.2f} -- {3}'.format(receipt,
-                                                     max_len_receipt_filename,
-                                                     metadata.price,
-                                                     metadata.retailer))
-
-    if args.sum:
+    if args.command_name == 'show':
+        for row in table:
+            print('{0:{1}} -- {2:{3}.2f} -- {4}'.format(
+                row[0],
+                max_len_receipt_filename,
+                row[1],
+                max_len_price,
+                row[2]))
+    elif args.command_name == 'sum':
         print('{0:.2f}'.format(price_sum))
