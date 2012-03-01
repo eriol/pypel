@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import argparse
+import os
+import sys
 
 from ebenezer.xmp import XMPReceiptMetadata
 
@@ -42,6 +44,11 @@ def main():
     max_len_price = 0
 
     for receipt in args.receipts:
+
+        if os.path.isdir(receipt):
+            exit_msg = '{} is a directory'.format(receipt)
+            sys.exit(exit_msg)
+
         metadata = XMPReceiptMetadata(receipt)
 
         if args.command_name == 'del':
