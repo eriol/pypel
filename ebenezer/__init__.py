@@ -5,6 +5,8 @@ import sys
 
 from ebenezer.xmp import XMPReceiptMetadata, SUPPORTED_EXT
 
+__version__ = '0.1'
+
 def main():
     parser = argparse.ArgumentParser(description='Easy receipts management.')
     subparsers = parser.add_subparsers(dest='command_name', help='commands')
