@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import argparse
 import os
-import sys
 
 from ebenezer.xmp import XMPReceiptMetadata, SUPPORTED_EXT
 
@@ -54,8 +53,7 @@ def main():
     for receipt in args.receipts:
 
         if os.path.isdir(receipt):
-            exit_msg = '{} is a directory'.format(receipt)
-            sys.exit(exit_msg)
+            print('{} is a directory'.format(receipt))
 
         # Skip if receipt is not an image file.
         if os.path.splitext(receipt)[1].lower() not in SUPPORTED_EXT:
