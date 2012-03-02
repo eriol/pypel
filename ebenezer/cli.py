@@ -89,19 +89,20 @@ def main():
             max_len_price = max([len(str(metadata.price)), max_len_price])
 
         elif args.command_name == 'sum':
-            price_sum += metadata.price
+            if metadata.price is not None:
+                price_sum += metadata.price
 
     if args.command_name == 'show':
         for row in table:
             if row['price'] is None:
-                price_fmt = '{2:{3}}'
+                price_fmt = '{2:^{3}}'
             else:
                 price_fmt = '{2:{3}.2f}'
             fmt_str = '{0:{1}} -- ' + price_fmt + ' -- {4}'
             print(fmt_str.format(row['receipt'],
                                  max_len_receipt_filename,
                                  row['price'],
-                                 max_len_price,
+                                 max_len_price + 1,
                                  row['retailer']))
     elif args.command_name == 'sum':
         print('{0:.2f}'.format(price_sum))
