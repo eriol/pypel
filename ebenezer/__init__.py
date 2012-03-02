@@ -3,7 +3,7 @@ import argparse
 import os
 import sys
 
-from ebenezer.xmp import XMPReceiptMetadata
+from ebenezer.xmp import XMPReceiptMetadata, SUPPORTED_EXT
 
 def main():
     parser = argparse.ArgumentParser(description='Easy receipts management.')
@@ -48,6 +48,10 @@ def main():
         if os.path.isdir(receipt):
             exit_msg = '{} is a directory'.format(receipt)
             sys.exit(exit_msg)
+
+        # Skip if receipt is not an image file.
+        if os.path.splitext(receipt)[1].lower() not in SUPPORTED_EXT:
+            continue
 
         metadata = XMPReceiptMetadata(receipt)
 

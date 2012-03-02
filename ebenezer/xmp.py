@@ -4,6 +4,8 @@ import pyexiv2
 PRICE_KEY = 'Xmp.ebenezer.Price'
 RETAILER_KEY = 'Xmp.ebenezer.Retailer'
 
+SUPPORTED_EXT = ('.jpg', '.jpeg', '.png')
+
 pyexiv2.xmp.register_namespace('http://mornie.org/xmp/ebenezer/', 'ebenezer')
 
 class XMPReceiptMetadata(object):
