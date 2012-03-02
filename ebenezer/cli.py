@@ -5,7 +5,9 @@ import sys
 
 from ebenezer.xmp import XMPReceiptMetadata, SUPPORTED_EXT
 
-def main():
+def parse_args():
+    """Parse the CLI arguments."""
+
     parser = argparse.ArgumentParser(description='Easy receipts management.')
     subparsers = parser.add_subparsers(dest='command_name', help='commands')
 
@@ -13,12 +15,14 @@ def main():
     show_parser = subparsers.add_parser('show', help='Show receipt\'s metadata')
     show_parser.add_argument('-s', '--sum', action='store_true',
                              help='sum receipts\' price')
+
     # A set command
     set_parser = subparsers.add_parser('set', help='Set receipt\'s metadata')
     set_parser.add_argument('-p', '--price', action='store', type=float,
                             help='set receipt\'s price')
     set_parser.add_argument('-r', '--retailer', action='store', type=str,
                             help='set receipt\'s retailer')
+
     # A delete command
     del_parser = subparsers.add_parser('del', help='Delete receipt\'s metadata')
     del_parser.add_argument('-p', '--price', action='store_true',
@@ -36,7 +40,11 @@ def main():
                                help='one or more receipts in a supported '
                                     'format')
 
-    args = parser.parse_args()
+    return parser.parse_args()
+
+def main():
+
+    args = parse_args()
 
     table = []
     price_sum = 0
