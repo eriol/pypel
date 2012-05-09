@@ -4,8 +4,8 @@ import os
 
 from ebenezer.models import Receipt, SUPPORTED_EXT
 
-def parse_args():
-    """Parse the CLI arguments."""
+def make_parsers():
+    """Create the parsers for the CLI tool."""
 
     parser = argparse.ArgumentParser(description='Easy receipts management.')
     subparsers = parser.add_subparsers(dest='command_name', help='commands')
@@ -32,18 +32,27 @@ def parse_args():
     # A sum command
     sum_parser = subparsers.add_parser('sum', help='Sum receipts\' price')
 
+    all_subparsers = dict(
+        show_parser=show_parser,
+        set_parser=set_parser,
+        del_parser=del_parser,
+        sum_parser=sum_parser)
+
     # HACK: This can be fixed when http://bugs.python.org/issue9540 will be
     # closed.
-    for subparser in (show_parser, set_parser, del_parser, sum_parser):
-        subparser.add_argument('receipts', metavar='receipt', nargs='+',
-                               help='one or more receipts in a supported '
-                                    'format')
+    for subparser in all_subparsers:
+        all_subparsers[subparser].add_argument('receipts',
+                                               metavar='receipt',
+                                               nargs='+',
+                                               help='one or more receipts in a '
+                                                    'supported format')
 
-    return parser.parse_args()
+    return parser, all_subparsers
 
 def main():
 
-    args = parse_args()
+    parser, subparsers = make_parsers()
+    args = parser.parse_args()
 
     table = []
     price_sum = 0
@@ -74,8 +83,8 @@ def main():
 
         if args.command_name == 'set':
             if args.price is None and args.retailer is None:
-                set_parser.error('You must provide at least --price '
-                                 'or --retailer.')
+                subparsers['set_parser'].error('You must provide at least '
+                                               '--price or --retailer.')
             if args.price:
                 receipt.price = args.price
 
