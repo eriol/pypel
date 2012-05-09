@@ -65,10 +65,13 @@ def main():
             if not args.price and not args.retailer:
                 del receipt.price
                 del receipt.retailer
-            elif args.price:
+
+            if args.price:
                 del receipt.price
-            elif args.retailer:
+
+            if args.retailer:
                 del receipt.retailer
+
         if args.command_name == 'set':
             if args.price is None and args.retailer is None:
                 set_parser.error('You must provide at least --price '
@@ -78,6 +81,7 @@ def main():
 
             if args.retailer:
                 receipt.retailer = args.retailer
+
         elif args.command_name == 'show':
             table.append(dict(receipt=receipt_file,
                               price=receipt.price,
