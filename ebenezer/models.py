@@ -8,7 +8,7 @@ SUPPORTED_EXT = ('.jpg', '.jpeg', '.png')
 
 pyexiv2.xmp.register_namespace('http://mornie.org/xmp/ebenezer/', 'ebenezer')
 
-class XMPReceiptMetadata(object):
+class Receipt(object):
 
     def __init__(self, file):
         self._metadata = pyexiv2.ImageMetadata(file)

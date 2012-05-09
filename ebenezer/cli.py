@@ -2,7 +2,7 @@
 import argparse
 import os
 
-from ebenezer.xmp import XMPReceiptMetadata, SUPPORTED_EXT
+from ebenezer.models import Receipt, SUPPORTED_EXT
 
 def parse_args():
     """Parse the CLI arguments."""
@@ -50,45 +50,45 @@ def main():
     max_len_receipt_filename = 0
     max_len_price = 0
 
-    for receipt in args.receipts:
+    for receipt_file in args.receipts:
 
-        if os.path.isdir(receipt):
-            print('{} is a directory'.format(receipt))
+        if os.path.isdir(receipt_file):
+            print('{} is a directory'.format(receipt_file))
 
-        # Skip if receipt is not an image file.
-        if os.path.splitext(receipt)[1].lower() not in SUPPORTED_EXT:
+        # Skip if receipt_file is not a supported file.
+        if os.path.splitext(receipt_file)[1].lower() not in SUPPORTED_EXT:
             continue
 
-        metadata = XMPReceiptMetadata(receipt)
+        receipt = Receipt(receipt_file)
 
         if args.command_name == 'del':
             if not args.price and not args.retailer:
-                del metadata.price
-                del metadata.retailer
+                del receipt.price
+                del receipt.retailer
             elif args.price:
-                del metadata.price
+                del receipt.price
             elif args.retailer:
-                del metadata.retailer
+                del receipt.retailer
         if args.command_name == 'set':
             if args.price is None and args.retailer is None:
                 set_parser.error('You must provide at least --price '
                                  'or --retailer.')
             if args.price:
-                metadata.price = args.price
+                receipt.price = args.price
 
             if args.retailer:
-                metadata.retailer = args.retailer
+                receipt.retailer = args.retailer
         elif args.command_name == 'show':
-            table.append(dict(receipt=receipt,
-                              price=metadata.price,
-                              retailer=metadata.retailer))
-            max_len_receipt_filename = max([len(receipt),
+            table.append(dict(receipt=receipt_file,
+                              price=receipt.price,
+                              retailer=receipt.retailer))
+            max_len_receipt_filename = max([len(receipt_file),
                                             max_len_receipt_filename])
-            max_len_price = max([len(str(metadata.price)), max_len_price])
+            max_len_price = max([len(str(receipt.price)), max_len_price])
 
         elif args.command_name == 'sum':
-            if metadata.price is not None:
-                price_sum += metadata.price
+            if receipt.price is not None:
+                price_sum += receipt.price
 
     if args.command_name == 'show':
         for row in table:
