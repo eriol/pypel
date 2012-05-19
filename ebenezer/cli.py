@@ -2,6 +2,7 @@
 import argparse
 import os
 
+from ebenezer.commands import delete_metadata, set_metadata
 from ebenezer.models import Receipt, SUPPORTED_EXT
 
 def make_parsers():
@@ -71,25 +72,13 @@ def main():
         receipt = Receipt(receipt_file)
 
         if args.command_name == 'del':
-            if not args.price and not args.retailer:
-                del receipt.price
-                del receipt.retailer
-
-            if args.price:
-                del receipt.price
-
-            if args.retailer:
-                del receipt.retailer
+            delete_metadata(receipt, args.price, args.retailer)
 
         if args.command_name == 'set':
             if args.price is None and args.retailer is None:
                 subparsers['set_parser'].error('You must provide at least '
                                                '--price or --retailer.')
-            if args.price:
-                receipt.price = args.price
-
-            if args.retailer:
-                receipt.retailer = args.retailer
+            set_metadata(receipt, args.price, args.retailer)
 
         elif args.command_name == 'show':
             table.append(dict(receipt=receipt_file,
