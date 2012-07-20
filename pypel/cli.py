@@ -33,11 +33,20 @@ def make_parsers():
     # A sum command
     sum_parser = subparsers.add_parser('sum', help='Sum receipts\' price')
 
+    # A gpg command
+    gpg_parser = subparsers.add_parser('gpg', help='Sign or verify receipt')
+    gpg_group = gpg_parser.add_mutually_exclusive_group()
+    gpg_group.add_argument('-s', '--sign', action='store_true',
+                            help='sign receipt')
+    gpg_group.add_argument('-v', '--verify', action='store_true',
+                            help='verify receipt')
+
     all_subparsers = dict(
         show_parser=show_parser,
         set_parser=set_parser,
         del_parser=del_parser,
-        sum_parser=sum_parser)
+        sum_parser=sum_parser,
+        gpg_parser=gpg_parser)
 
     # HACK: This can be fixed when http://bugs.python.org/issue9540 will be
     # closed.
@@ -91,6 +100,11 @@ def main():
         elif args.command_name == 'sum':
             if receipt.price is not None:
                 price_sum += receipt.price
+
+        elif args.command_name == 'gpg':
+            if not args.sign and not args.verify:
+                subparsers['gpg_parser'].error('You must provide at least '
+                                               '--sign or --verify.')
 
     if args.command_name == 'show':
         for row in table:
