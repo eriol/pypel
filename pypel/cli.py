@@ -2,8 +2,8 @@
 import argparse
 import os
 
-from ebenezer.commands import delete_metadata, set_metadata
-from ebenezer.models import Receipt, SUPPORTED_EXT
+from pypel.commands import delete_metadata, set_metadata
+from pypel.models import Receipt, SUPPORTED_EXT
 
 def make_parsers():
     """Create the parsers for the CLI tool."""
