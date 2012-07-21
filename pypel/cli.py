@@ -3,7 +3,9 @@ import argparse
 import os
 
 from pypel.commands import delete_metadata, set_metadata
+from pypel.gpg import sign, verify
 from pypel.models import Receipt, SUPPORTED_EXT
+
 
 def make_parsers():
     """Create the parsers for the CLI tool."""
@@ -105,6 +107,12 @@ def main():
             if not args.sign and not args.verify:
                 subparsers['gpg_parser'].error('You must provide at least '
                                                '--sign or --verify.')
+
+            if args.sign:
+                sign(receipt_file)
+
+            if args.verify:
+                verify(receipt_file)
 
     if args.command_name == 'show':
         for row in table:
