@@ -132,7 +132,8 @@ def main():
                               verified.key_id))
                 except ValueError as err:
                     print('{}: {}'.format(receipt_file, err))
-
+                except IOError as err:
+                    print('{}: {}'.format(err.filename, err.strerror))
 
     if args.command_name == 'show':
         for row in table:
