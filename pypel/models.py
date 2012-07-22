@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import pyexiv2
 
-PRICE_KEY = 'Xmp.ebenezer.Price'
-RETAILER_KEY = 'Xmp.ebenezer.Retailer'
+PRICE_KEY = 'Xmp.pypel.Price'
+RETAILER_KEY = 'Xmp.pypel.Retailer'
 
 SUPPORTED_EXT = ('.jpg', '.jpeg', '.png')
 
-pyexiv2.xmp.register_namespace('http://mornie.org/xmp/ebenezer/', 'ebenezer')
+pyexiv2.xmp.register_namespace('http://mornie.org/xmp/pypel/', 'pypel')
 
 class Receipt(object):
 
