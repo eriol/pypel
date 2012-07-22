@@ -74,7 +74,8 @@ def main():
     for receipt_file in args.receipts:
 
         if os.path.isdir(receipt_file):
-            print('{} is a directory'.format(receipt_file))
+            print('{}: is a directory.'.format(receipt_file))
+            continue
 
         # Skip if receipt_file is not a supported file.
         if os.path.splitext(receipt_file)[1].lower() not in SUPPORTED_EXT:
@@ -112,7 +113,10 @@ def main():
                 sign(receipt_file)
 
             if args.verify:
-                verify(receipt_file)
+                try:
+                    verify(receipt_file)
+                except ValueError as err:
+                    print('{}: {}'.format(receipt_file, err))
 
     if args.command_name == 'show':
         for row in table:

@@ -24,7 +24,7 @@ def verify(file_path):
     with open(_sign_file_path(file_path), 'rb') as f:
         verified = gpg.verify_file(f, file_path)
 
-    if not verified:
-        raise ValueError("Signature could not be verified!")
+        if not verified:
+            raise ValueError('Signature could not be verified!')
 
-    return verified
+        return verified
