@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import argparse
+import time
 import os
+
+from datetime import datetime
 
 from pypel.commands import delete_metadata, set_metadata
 from pypel.gpg import sign, verify
@@ -117,7 +120,16 @@ def main():
 
             if args.verify:
                 try:
-                    verify(receipt_file)
+                    verified = verify(receipt_file)
+
+                    if verified:
+                        print('Good signature from "{}"'.format(
+                              verified.username))
+                        d = datetime.fromtimestamp(float(verified.timestamp))
+                        print('Signature made {} {} using key ID {}'.format(
+                              d.isoformat(' '),
+                              time.tzname[time.daylight],
+                              verified.key_id))
                 except ValueError as err:
                     print('{}: {}'.format(receipt_file, err))
 
@@ -133,5 +145,6 @@ def main():
                                  row['price'],
                                  max_len_price + 1,
                                  row['retailer']))
+
     elif args.command_name == 'sum':
         print('{0:.2f}'.format(price_sum))
