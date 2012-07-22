@@ -77,10 +77,10 @@ def main():
     for receipt_file in args.receipts:
 
         if not os.path.exists(receipt_file):
-            print('{}: No such file or directory.'.format(receipt_file))
+            print('{}: No such file or directory'.format(receipt_file))
 
         if os.path.isdir(receipt_file):
-            print('{}: is a directory.'.format(receipt_file))
+            print('{}: Is a directory'.format(receipt_file))
             continue
 
         # Skip if receipt_file is not a supported file.
@@ -95,7 +95,7 @@ def main():
         if args.command_name == 'set':
             if args.price is None and args.retailer is None:
                 subparsers['set_parser'].error('You must provide at least '
-                                               '--price or --retailer.')
+                                               '--price or --retailer')
             set_metadata(receipt, args.price, args.retailer)
 
         elif args.command_name == 'show':
@@ -113,7 +113,7 @@ def main():
         elif args.command_name == 'gpg':
             if not args.sign and not args.verify:
                 subparsers['gpg_parser'].error('You must provide at least '
-                                               '--sign or --verify.')
+                                               '--sign or --verify')
 
             if args.sign:
                 sign(receipt_file)
@@ -132,6 +132,7 @@ def main():
                               verified.key_id))
                 except ValueError as err:
                     print('{}: {}'.format(receipt_file, err))
+
 
     if args.command_name == 'show':
         for row in table:
