@@ -4,7 +4,7 @@ import pyexiv2
 PRICE_KEY = 'Xmp.pypel.Price'
 RETAILER_KEY = 'Xmp.pypel.Retailer'
 
-SUPPORTED_EXT = ('.jpg', '.jpeg', '.png')
+SUPPORTED_EXT = ('.jpg', '.jpeg', '.png', '.eps')
 
 pyexiv2.xmp.register_namespace('http://mornie.org/xmp/pypel/', 'pypel')
 
