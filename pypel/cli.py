@@ -18,8 +18,8 @@ def make_parsers():
 
     # A show command
     show_parser = subparsers.add_parser('show', help='Show receipt\'s metadata')
-    show_parser.add_argument('-s', '--sum', action='store_true',
-                             help='sum receipts\' price')
+    show_parser.add_argument('-v', '--verify', action='store_true',
+                             help='verify receipt')
 
     # A set command
     set_parser = subparsers.add_parser('set', help='Set receipt\'s metadata')
@@ -99,9 +99,22 @@ def main():
             set_metadata(receipt, args.price, args.retailer)
 
         elif args.command_name == 'show':
-            table.append(dict(receipt=receipt_file,
-                              price=receipt.price,
-                              retailer=receipt.retailer))
+
+            row = dict(receipt=receipt_file,
+                       price=receipt.price,
+                       retailer=receipt.retailer)
+
+            # Verify signature for the receipt if needed. If signature is
+            # missing `verified' must be False.
+            if args.verify:
+                try:
+                    verified = verify(receipt_file).valid
+                except (ValueError, IOError):
+                    verified = False
+
+                row.update(dict(verified=verified))
+
+            table.append(row)
             max_len_receipt_filename = max([len(receipt_file),
                                             max_len_receipt_filename])
             max_len_price = max([len(str(receipt.price)), max_len_price])
@@ -141,7 +154,11 @@ def main():
                 price_fmt = '{2:^{3}}'
             else:
                 price_fmt = '{2:{3}.2f}'
+
             fmt_str = '{0:{1}} -- ' + price_fmt + ' -- {4}'
+            if args.verify:
+                fmt_str += ' | {}'.format(row['verified'])
+
             print(fmt_str.format(row['receipt'],
                                  max_len_receipt_filename,
                                  row['price'],
