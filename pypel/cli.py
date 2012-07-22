@@ -5,6 +5,8 @@ import os
 
 from datetime import datetime
 
+from pygments.console import ansiformat
+
 from pypel.commands import delete_metadata, set_metadata
 from pypel.gpg import sign, verify
 from pypel.models import Receipt, SUPPORTED_EXT
@@ -19,7 +21,9 @@ def make_parsers():
     # A show command
     show_parser = subparsers.add_parser('show', help='Show receipt\'s metadata')
     show_parser.add_argument('-v', '--verify', action='store_true',
-                             help='verify receipt')
+                             help='Verify receipt')
+    show_parser.add_argument('-c', '--color', action='store_true',
+                             help='Colorize the output')
 
     # A set command
     set_parser = subparsers.add_parser('set', help='Set receipt\'s metadata')
@@ -156,8 +160,15 @@ def main():
                 price_fmt = '{2:{3}.2f}'
 
             fmt_str = '{0:{1}} -- ' + price_fmt + ' -- {4}'
-            if args.verify:
+
+            if args.verify and not args.color:
                 fmt_str += ' | {}'.format(row['verified'])
+
+            if args.verify and args.color:
+                if row['verified']:
+                    fmt_str = ansiformat('green', fmt_str)
+                else:
+                    fmt_str = ansiformat('red', fmt_str)
 
             print(fmt_str.format(row['receipt'],
                                  max_len_receipt_filename,
