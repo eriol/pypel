@@ -73,6 +73,9 @@ def main():
 
     for receipt_file in args.receipts:
 
+        if not os.path.exists(receipt_file):
+            print('{}: No such file or directory.'.format(receipt_file))
+
         if os.path.isdir(receipt_file):
             print('{}: is a directory.'.format(receipt_file))
             continue
