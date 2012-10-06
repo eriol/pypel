@@ -11,6 +11,7 @@ pyexiv2.xmp.register_namespace('http://mornie.org/xmp/pypel/', 'pypel')
 class Receipt(object):
 
     def __init__(self, file):
+        self.file = file
         self._metadata = pyexiv2.ImageMetadata(file)
         self._metadata.read()
 
