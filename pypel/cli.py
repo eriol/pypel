@@ -68,16 +68,7 @@ def make_parsers():
 
     return parser, all_subparsers
 
-def main():
-
-    parser, subparsers = make_parsers()
-    args = parser.parse_args()
-
-    table = []
-    price_sum = 0
-    max_len_receipt_filename = 0
-    max_len_price = 0
-
+def receipts(args):
     for receipt_file in args.receipts:
 
         if not os.path.exists(receipt_file):
@@ -93,88 +84,117 @@ def main():
 
         receipt = Receipt(receipt_file)
 
-        if args.command_name == 'del':
-            delete_metadata(receipt, args.price, args.retailer)
+        yield receipt
 
-        if args.command_name == 'set':
-            if args.price is None and args.retailer is None:
-                subparsers['set_parser'].error('You must provide at least '
-                                               '--price or --retailer')
-            set_metadata(receipt, args.price, args.retailer)
+def do_show(args):
+    # TODO: use jinja2
+    table = []
+    max_len_receipt_filename = 0
+    max_len_price = 0
 
-        elif args.command_name == 'show':
+    for receipt in receipts(args):
+        row = dict(receipt=receipt.file,
+                   price=receipt.price,
+                   retailer=receipt.retailer)
 
-            row = dict(receipt=receipt_file,
-                       price=receipt.price,
-                       retailer=receipt.retailer)
+        # Verify signature for the receipt if needed. If signature is
+        # missing `verified' must be False.
+        if args.verify:
+            try:
+                verified = verify(receipt.file).valid
+            except (ValueError, IOError):
+                verified = False
 
-            # Verify signature for the receipt if needed. If signature is
-            # missing `verified' must be False.
-            if args.verify:
-                try:
-                    verified = verify(receipt_file).valid
-                except (ValueError, IOError):
-                    verified = False
+            row.update(dict(verified=verified))
 
-                row.update(dict(verified=verified))
+        table.append(row)
+        max_len_receipt_filename = max([len(receipt.file),
+                                        max_len_receipt_filename])
+        max_len_price = max([len(str(receipt.price)), max_len_price])
 
-            table.append(row)
-            max_len_receipt_filename = max([len(receipt_file),
-                                            max_len_receipt_filename])
-            max_len_price = max([len(str(receipt.price)), max_len_price])
+    for row in table:
+        if row['price'] is None:
+            price_fmt = '{2:^{3}}'
+        else:
+            price_fmt = '{2:{3}.2f}'
 
-        elif args.command_name == 'sum':
-            if receipt.price is not None:
-                price_sum += receipt.price
+        fmt_str = '{0:{1}} -- ' + price_fmt + ' -- {4}'
 
-        elif args.command_name == 'gpg':
-            if not args.sign and not args.verify:
-                subparsers['gpg_parser'].error('You must provide at least '
-                                               '--sign or --verify')
+        if args.verify and not args.color:
+            fmt_str += ' | {}'.format(row['verified'])
 
-            if args.sign:
-                sign(receipt_file)
-
-            if args.verify:
-                try:
-                    verified = verify(receipt_file)
-
-                    if verified:
-                        print('Good signature from "{}"'.format(
-                              verified.username))
-                        d = datetime.fromtimestamp(float(verified.timestamp))
-                        print('Signature made {} {} using key ID {}'.format(
-                              d.isoformat(' '),
-                              time.tzname[time.daylight],
-                              verified.key_id))
-                except ValueError as err:
-                    print('{}: {}'.format(receipt_file, err))
-                except IOError as err:
-                    print('{}: {}'.format(err.filename, err.strerror))
-
-    if args.command_name == 'show':
-        for row in table:
-            if row['price'] is None:
-                price_fmt = '{2:^{3}}'
+        if args.verify and args.color:
+            if row['verified']:
+                fmt_str = ansiformat('green', fmt_str)
             else:
-                price_fmt = '{2:{3}.2f}'
+                fmt_str = ansiformat('red', fmt_str)
 
-            fmt_str = '{0:{1}} -- ' + price_fmt + ' -- {4}'
+        print(fmt_str.format(row['receipt'],
+                             max_len_receipt_filename,
+                             row['price'],
+                             max_len_price + 1,
+                             row['retailer']))
 
-            if args.verify and not args.color:
-                fmt_str += ' | {}'.format(row['verified'])
+def do_set(args):
+    for receipt in receipts(args):
+        set_metadata(receipt, args.price, args.retailer)
 
-            if args.verify and args.color:
-                if row['verified']:
-                    fmt_str = ansiformat('green', fmt_str)
-                else:
-                    fmt_str = ansiformat('red', fmt_str)
+def do_del(args):
+    for receipt in receipts(args):
+        delete_metadata(receipt, args.price, args.retailer)
 
-            print(fmt_str.format(row['receipt'],
-                                 max_len_receipt_filename,
-                                 row['price'],
-                                 max_len_price + 1,
-                                 row['retailer']))
+def do_sum(args):
+    price_sum = 0
+    for receipt in receipts(args):
+        if receipt.price is not None:
+            price_sum += receipt.price
+
+    print('{0:.2f}'.format(price_sum))
+
+def do_gpg(args):
+    for receipt in receipts(args):
+        if args.sign:
+            sign(receipt.file)
+
+        if args.verify:
+            try:
+                verified = verify(receipt.file)
+                if verified:
+                    print('Good signature from "{}"'.format(
+                            verified.username))
+                    d = datetime.fromtimestamp(float(verified.timestamp))
+                    print('Signature made {} {} using key ID {}'.format(
+                            d.isoformat(' '),
+                            time.tzname[time.daylight],
+                            verified.key_id))
+            except ValueError as err:
+                print('{}: {}'.format(receipt.file, err))
+            except IOError as err:
+                print('{}: {}'.format(err.filename, err.strerror))
+
+def main():
+
+    parser, subparsers = make_parsers()
+    args = parser.parse_args()
+
+    if args.command_name == 'del':
+        do_del(args)
+
+    elif args.command_name == 'set':
+        if args.price is None and args.retailer is None:
+            subparsers['set_parser'].error('You must provide at least '
+                                           '--price or --retailer')
+        do_set(args)
+
+    elif args.command_name == 'show':
+        do_show(args)
 
     elif args.command_name == 'sum':
-        print('{0:.2f}'.format(price_sum))
+        do_sum(args)
+
+    elif args.command_name == 'gpg':
+        if not args.sign and not args.verify:
+            subparsers['gpg_parser'].error('You must provide at least '
+                                           '--sign or --verify')
+        do_gpg(args)
+
