@@ -11,6 +11,7 @@ from pypel.commands import delete_metadata, set_metadata
 from pypel.gpg import sign, verify
 from pypel.models import Receipt, SUPPORTED_EXT
 
+PYPELKEY = os.environ.get('PYPELKEY')
 
 def make_parsers():
     """Create the parsers for the CLI tool."""
@@ -154,7 +155,7 @@ def do_sum(args):
 def do_gpg(args):
     for receipt in receipts(args):
         if args.sign:
-            sign(receipt.file)
+            sign(receipt.file, keyid=PYPELKEY)
 
         if args.verify:
             try:
