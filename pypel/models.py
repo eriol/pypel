@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os.path
+
 import pyexiv2
 
 PRICE_KEY = 'Xmp.pypel.Price'
@@ -7,6 +9,16 @@ RETAILER_KEY = 'Xmp.pypel.Retailer'
 SUPPORTED_EXT = ('.jpg', '.jpeg', '.png', '.eps')
 
 pyexiv2.xmp.register_namespace('http://mornie.org/xmp/pypel/', 'pypel')
+
+class DoesNotExist(IOError):
+    """The file or directory does not exist"""
+
+class IsADirectory(IOError):
+    """This is a directory so you can't use it as a receipt"""
+
+class ImageNotSupported(IOError):
+    """Image is not supported"""
+
 
 class Receipt(object):
 
@@ -54,3 +66,15 @@ class Receipt(object):
         except KeyError:
             pass
         self._metadata.write()
+
+def make_receipt(file):
+    """Check for errors and create a receipt"""
+
+    if not os.path.exists(file):
+        raise DoesNotExist('No such file or directory')
+    elif os.path.isdir(file):
+        raise IsADirectory('Is a directory')
+    elif os.path.splitext(file)[1].lower() not in SUPPORTED_EXT:
+        raise ImageNotSupported
+
+    return Receipt(file)

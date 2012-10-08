@@ -9,7 +9,8 @@ from pygments.console import ansiformat
 
 from pypel.commands import delete_metadata, set_metadata
 from pypel.gpg import sign, verify
-from pypel.models import Receipt, SUPPORTED_EXT
+from pypel.models import (make_receipt, DoesNotExist, IsADirectory,
+                          ImageNotSupported)
 
 PYPELKEY = os.environ.get('PYPELKEY')
 
@@ -72,20 +73,18 @@ def make_parsers():
 def receipts(args):
     for receipt_file in args.receipts:
 
-        if not os.path.exists(receipt_file):
-            print('{}: No such file or directory'.format(receipt_file))
-
-        if os.path.isdir(receipt_file):
-            print('{}: Is a directory'.format(receipt_file))
+        try:
+            receipt = make_receipt(receipt_file)
+            yield receipt
+        except DoesNotExist as e:
+            print('{}: {}'.format(receipt_file, e))
             continue
-
-        # Skip if receipt_file is not a supported file.
-        if os.path.splitext(receipt_file)[1].lower() not in SUPPORTED_EXT:
+        except IsADirectory as e:
+            print('{}: {}'.format(receipt_file, e))
             continue
-
-        receipt = Receipt(receipt_file)
-
-        yield receipt
+        except ImageNotSupported as e:
+            # Skip if receipt_file is not a supported file.
+            continue
 
 def do_show(args):
     # TODO: use jinja2
