@@ -7,8 +7,8 @@ import unittest
 import cairo
 
 
-from pypel.models import (Receipt, make_receipt, DoesNotExist, IsADirectory,
-                          ImageNotSupported)
+from pypel.models import (Receipt, set_metadata, delete_metadata, make_receipt,
+    DoesNotExist, IsADirectory, ImageNotSupported)
 
 
 class ReceiptSetUpTestCase(unittest.TestCase):
@@ -45,6 +45,33 @@ class ReceiptMetadataTestCase(ReceiptSetUpTestCase):
         self.assertEqual(self.receipt.retailer, 'Bazaar')
 
         del self.receipt.retailer
+        self.assertEqual(self.receipt.retailer, None)
+
+    def test_set_metadata(self):
+        """Test set_metadata command."""
+
+        self.assertEqual(self.receipt.price, None)
+        self.assertEqual(self.receipt.retailer, None)
+
+        set_metadata(self.receipt, price=8.27)
+        self.assertEqual(self.receipt.price, 8.27)
+        self.assertEqual(self.receipt.retailer, None)
+
+        set_metadata(self.receipt, retailer='Bazaar')
+        self.assertEqual(self.receipt.retailer, 'Bazaar')
+
+    def test_delete_metadata(self):
+        """Test delete_metadata command."""
+
+        set_metadata(self.receipt, price=8.27, retailer='Bazaar')
+
+        self.assertEqual(self.receipt.price, 8.27)
+        self.assertEqual(self.receipt.retailer, 'Bazaar')
+
+        delete_metadata(self.receipt, price=True)
+        self.assertEqual(self.receipt.price, None)
+
+        delete_metadata(self.receipt, retailer=True)
         self.assertEqual(self.receipt.retailer, None)
 
 class MakeReceiptTestCase(unittest.TestCase):

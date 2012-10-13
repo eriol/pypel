@@ -7,10 +7,9 @@ from datetime import datetime
 
 from pygments.console import ansiformat
 
-from pypel.commands import delete_metadata, set_metadata
 from pypel.gpg import sign, verify
-from pypel.models import (make_receipt, DoesNotExist, IsADirectory,
-                          ImageNotSupported)
+from pypel.models import (delete_metadata, set_metadata, make_receipt,
+    DoesNotExist, IsADirectory, ImageNotSupported)
 
 PYPELKEY = os.environ.get('PYPELKEY')
 
