@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+""" Tests for pypel.models.
+
+THIS SOFTWARE IS UNDER BSD LICENSE.
+Copyright (c) 2012 Daniele Tricoli <eriol@mornie.org>
+
+Read LICENSE for more informations.
+"""
 
 import tempfile
 import unittest

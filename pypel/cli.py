@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+"""pypel.cli, CLI interface for pypel.
+
+THIS SOFTWARE IS UNDER BSD LICENSE.
+Copyright (c) 2012 Daniele Tricoli <eriol@mornie.org>
+
+Read LICENSE for more informations.
+"""
+
 import argparse
 import time
 import os

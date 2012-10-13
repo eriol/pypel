@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+"""pypel.models, models for pypel.
+
+THIS SOFTWARE IS UNDER BSD LICENSE.
+Copyright (c) 2012 Daniele Tricoli <eriol@mornie.org>
+
+Read LICENSE for more informations.
+"""
+
 import os.path
 
 import pyexiv2
