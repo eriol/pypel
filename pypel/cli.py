@@ -10,12 +10,20 @@ Read LICENSE for more informations.
 import argparse
 import time
 import os
+import warnings
 
 from datetime import datetime
 
-from pygments.console import ansiformat
+try:
+    from pygments.console import ansiformat
+except ImportError:
+    ansiformat = None
 
-from pypel.gpg import sign, verify
+try:
+    from pypel.gpg import sign, verify
+    gnupg = True
+except ImportError:
+    gnupg = False
 from pypel.models import (delete_metadata, set_metadata, make_receipt,
     DoesNotExist, IsADirectory, ImageNotSupported)
 
@@ -107,9 +115,12 @@ def do_show(args):
         # Verify signature for the receipt if needed. If signature is
         # missing `verified' must be False.
         if args.verify:
+            if not gnupg:
+                warnings.warn('You must install gnupg module to sign and'
+                              ' verify receipts.')
             try:
                 verified = verify(receipt.file).valid
-            except (ValueError, IOError):
+            except (ValueError, IOError, NameError):
                 verified = False
 
             row.update(dict(verified=verified))
@@ -131,10 +142,14 @@ def do_show(args):
             fmt_str += ' | {}'.format(row['verified'])
 
         if args.verify and args.color:
-            if row['verified']:
-                fmt_str = ansiformat('green', fmt_str)
+            if ansiformat:
+                if row['verified']:
+                    fmt_str = ansiformat('green', fmt_str)
+                else:
+                    fmt_str = ansiformat('red', fmt_str)
             else:
-                fmt_str = ansiformat('red', fmt_str)
+                warnings.warn('You must install pygments to have colored '
+                              'output.')
 
         print(fmt_str.format(row['receipt'],
                              max_len_receipt_filename,
@@ -159,25 +174,29 @@ def do_sum(args):
     print('{0:.2f}'.format(price_sum))
 
 def do_gpg(args):
-    for receipt in receipts(args):
-        if args.sign:
-            sign(receipt.file, keyid=PYPELKEY)
+    if gnupg:
+        for receipt in receipts(args):
+            if args.sign:
+                sign(receipt.file, keyid=PYPELKEY)
 
-        if args.verify:
-            try:
-                verified = verify(receipt.file)
-                if verified:
-                    print('Good signature from "{}"'.format(
-                            verified.username))
-                    d = datetime.fromtimestamp(float(verified.timestamp))
-                    print('Signature made {} {} using key ID {}'.format(
-                            d.isoformat(' '),
-                            time.tzname[time.daylight],
-                            verified.key_id))
-            except ValueError as err:
-                print('{}: {}'.format(receipt.file, err))
-            except IOError as err:
-                print('{}: {}'.format(err.filename, err.strerror))
+            if args.verify:
+                try:
+                    verified = verify(receipt.file)
+                    if verified:
+                        print('Good signature from "{}"'.format(
+                                verified.username))
+                        d = datetime.fromtimestamp(float(verified.timestamp))
+                        print('Signature made {} {} using key ID {}'.format(
+                                d.isoformat(' '),
+                                time.tzname[time.daylight],
+                                verified.key_id))
+                except ValueError as err:
+                    print('{}: {}'.format(receipt.file, err))
+                except IOError as err:
+                    print('{}: {}'.format(err.filename, err.strerror))
+    else:
+        warnings.warn('You must install gnupg module to sign and verify'
+                      ' receipts.')
 
 def main():
 
@@ -204,4 +223,3 @@ def main():
             subparsers['gpg_parser'].error('You must provide at least '
                                            '--sign or --verify')
         do_gpg(args)
-
