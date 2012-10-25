@@ -41,6 +41,7 @@ def make_parsers():
                              help='Verify receipt')
     show_parser.add_argument('-c', '--color', action='store_true',
                              help='Colorize the output')
+    show_parser.set_defaults(action=do_show)
 
     # A set command
     set_parser = subparsers.add_parser('set', help='Set receipt\'s metadata')
@@ -48,6 +49,7 @@ def make_parsers():
                             help='set receipt\'s price')
     set_parser.add_argument('-r', '--retailer', action='store', type=str,
                             help='set receipt\'s retailer')
+    set_parser.set_defaults(action=do_set)
 
     # A delete command
     del_parser = subparsers.add_parser('del', help='Delete receipt\'s metadata')
@@ -55,9 +57,11 @@ def make_parsers():
                             help='delete receipt\'s price')
     del_parser.add_argument('-r', '--retailer', action='store_true',
                             help='delete receipt\'s retailer')
+    del_parser.set_defaults(action=do_del)
 
     # A sum command
     sum_parser = subparsers.add_parser('sum', help='Sum receipts\' price')
+    sum_parser.set_defaults(action=do_sum)
 
     # A gpg command
     gpg_parser = subparsers.add_parser('gpg', help='Sign or verify receipt')
@@ -66,6 +70,7 @@ def make_parsers():
                             help='sign receipt')
     gpg_group.add_argument('-v', '--verify', action='store_true',
                             help='verify receipt')
+    gpg_parser.set_defaults(action=do_gpg)
 
     all_subparsers = dict(
         show_parser=show_parser,
@@ -203,23 +208,12 @@ def main():
     parser, subparsers = make_parsers()
     args = parser.parse_args()
 
-    if args.command_name == 'del':
-        do_del(args)
-
-    elif args.command_name == 'set':
+    if args.command_name == 'set':
         if args.price is None and args.retailer is None:
             subparsers['set_parser'].error('You must provide at least '
                                            '--price or --retailer')
-        do_set(args)
-
-    elif args.command_name == 'show':
-        do_show(args)
-
-    elif args.command_name == 'sum':
-        do_sum(args)
-
     elif args.command_name == 'gpg':
         if not args.sign and not args.verify:
             subparsers['gpg_parser'].error('You must provide at least '
                                            '--sign or --verify')
-        do_gpg(args)
+    args.action(args)
