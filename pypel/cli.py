@@ -36,27 +36,27 @@ def make_parsers():
     subparsers = parser.add_subparsers(dest='command_name', help='commands')
 
     # A show command
-    show_parser = subparsers.add_parser('show', help='Show receipt\'s metadata')
+    show_parser = subparsers.add_parser('show', help='Show receipts\' metadata')
     show_parser.add_argument('-v', '--verify', action='store_true',
-                             help='Verify receipt')
+                             help='verify receipts')
     show_parser.add_argument('-c', '--color', action='store_true',
-                             help='Colorize the output')
+                             help='colorize the output')
     show_parser.set_defaults(action=do_show)
 
     # A set command
-    set_parser = subparsers.add_parser('set', help='Set receipt\'s metadata')
+    set_parser = subparsers.add_parser('set', help='Set receipts\' metadata')
     set_parser.add_argument('-p', '--price', action='store', type=float,
-                            help='set receipt\'s price')
+                            help='set receipts\' price')
     set_parser.add_argument('-r', '--retailer', action='store', type=str,
-                            help='set receipt\'s retailer')
+                            help='set receipts\' retailer')
     set_parser.set_defaults(action=do_set)
 
     # A delete command
-    del_parser = subparsers.add_parser('del', help='Delete receipt\'s metadata')
+    del_parser = subparsers.add_parser('del', help='Delete receipts\' metadata')
     del_parser.add_argument('-p', '--price', action='store_true',
-                            help='delete receipt\'s price')
+                            help='delete receipts\' price')
     del_parser.add_argument('-r', '--retailer', action='store_true',
-                            help='delete receipt\'s retailer')
+                            help='delete receipts\' retailer')
     del_parser.set_defaults(action=do_del)
 
     # A sum command
@@ -64,12 +64,12 @@ def make_parsers():
     sum_parser.set_defaults(action=do_sum)
 
     # A gpg command
-    gpg_parser = subparsers.add_parser('gpg', help='Sign or verify receipt')
+    gpg_parser = subparsers.add_parser('gpg', help='Sign or verify receipts')
     gpg_group = gpg_parser.add_mutually_exclusive_group()
     gpg_group.add_argument('-s', '--sign', action='store_true',
-                            help='sign receipt')
+                            help='sign receipts')
     gpg_group.add_argument('-v', '--verify', action='store_true',
-                            help='verify receipt')
+                            help='verify receipts')
     gpg_parser.set_defaults(action=do_gpg)
 
     all_subparsers = dict(
