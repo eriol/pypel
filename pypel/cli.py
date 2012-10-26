@@ -19,6 +19,7 @@ try:
 except ImportError:
     ansiformat = None
 
+from pypel import get_version
 try:
     from pypel.gpg import sign, verify
     gnupg = True
@@ -32,7 +33,8 @@ PYPELKEY = os.environ.get('PYPELKEY')
 def make_parsers():
     """Create the parsers for the CLI tool."""
 
-    parser = argparse.ArgumentParser(description='Easy receipts management.')
+    parser = argparse.ArgumentParser(description='Easy receipts management.',
+                                     version=get_version())
     subparsers = parser.add_subparsers(dest='command_name', help='commands')
 
     # A show command
