@@ -16,7 +16,7 @@ inside receipts so you can share them in a very easy way.
    :maxdepth: 2
 
    installing_pypel
-   command_line_tool
+   command_line
    changelog
    licensing
 
