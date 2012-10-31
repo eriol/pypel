@@ -6,12 +6,17 @@
 pypel
 =====
 
-``pypel`` is a simple tool to manage receipts' electronic storage.
+``pypel`` is a simple tool to manage receipts. It uses `XMP`_ to store metatada
+inside receipts so you can share them in a very easy way.
+
+.. _XMP: http://en.wikipedia.org/wiki/Extensible_Metadata_Platform
+
 
 .. toctree::
    :maxdepth: 2
 
    installing_pypel
+   command_line_tool
    changelog
    licensing
 
