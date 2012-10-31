@@ -130,7 +130,7 @@ environment variable.
 
 .. cmdoption:: -s, --sign
 
-   Sign receipt.
+   Sign receipts.
 
 .. cmdoption:: -v, --verify
 
