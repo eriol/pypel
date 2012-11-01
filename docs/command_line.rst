@@ -36,6 +36,8 @@ Command line usage
 - **sum**: :ref:`command-sum`
 - **gpg**: :ref:`command-gpg`
 
+.. note:: Receipts' supported extensions are: jpg, jpeg, png, eps.
+
 .. _command-show:
 
 Show receipts' metadata
