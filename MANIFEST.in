@@ -3,5 +3,5 @@ include LICENSE
 include CHANGELOG
 include MANIFEST.in
 include README
-recursive-include docs *.txt *.py Makefile
+recursive-include docs *.rst *.py Makefile
 prune docs/_build
