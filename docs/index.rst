@@ -21,4 +21,4 @@ inside receipts so you can share them in a very easy way.
    licensing
 
 :Release: |version|
-:Date: November 01, 2012
+:Date: November 02, 2012
