@@ -1,0 +1,7 @@
+include AUTHORS
+include LICENSE
+include CHANGELOG
+include MANIFEST.in
+include README
+recursive-include docs *.txt *.py Makefile
+prune docs/_build
