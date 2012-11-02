@@ -11,6 +11,10 @@ import distutils.core
 
 from pypel import get_version
 
+def read(filename):
+    """Small tool function to read file content."""
+    return open(os.path.join(os.path.dirname(__file__), filename)).read()
+
 classifiers = '''
 Development Status :: 3 - Alpha
 Environment :: Console
@@ -27,7 +31,7 @@ distutils.core.setup(
     version = get_version(),
     license = 'BSD',
     description = 'simple tool to manage receipts',
-    #long_description = ,
+    long_description = read('README'),
     classifiers = classifiers,
     url = 'http://mornie.org/projects/pypel/',
     author = 'Daniele Tricoli',
