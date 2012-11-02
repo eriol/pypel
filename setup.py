@@ -8,12 +8,16 @@ Read LICENSE for more informations.
 """
 
 import distutils.core
+import os.path
+
 
 from pypel import get_version
+
 
 def read(filename):
     """Small tool function to read file content."""
     return open(os.path.join(os.path.dirname(__file__), filename)).read()
+
 
 classifiers = '''
 Development Status :: 3 - Alpha
