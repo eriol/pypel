@@ -54,32 +54,51 @@ class ReceiptMetadataTestCase(ReceiptSetUpTestCase):
         del self.receipt.retailer
         self.assertEqual(self.receipt.retailer, None)
 
+    def test_note(self):
+        """Set/get note for receipt."""
+        self.receipt.note = 'A book worth reading is worth buying.'
+        self.assertEqual(self.receipt.note,
+                         'A book worth reading is worth buying.')
+
+        del self.receipt.note
+        self.assertEqual(self.receipt.note, None)
+
     def test_set_metadata(self):
         """Test set_metadata command."""
 
         self.assertEqual(self.receipt.price, None)
         self.assertEqual(self.receipt.retailer, None)
+        self.assertEqual(self.receipt.note, None)
 
         set_metadata(self.receipt, price=8.27)
         self.assertEqual(self.receipt.price, 8.27)
         self.assertEqual(self.receipt.retailer, None)
+        self.assertEqual(self.receipt.note, None)
 
         set_metadata(self.receipt, retailer='Bazaar')
         self.assertEqual(self.receipt.retailer, 'Bazaar')
+        self.assertEqual(self.receipt.note, None)
+
+        set_metadata(self.receipt, note='This is a note.')
+        self.assertEqual(self.receipt.note, 'This is a note.')
 
     def test_delete_metadata(self):
         """Test delete_metadata command."""
 
-        set_metadata(self.receipt, price=8.27, retailer='Bazaar')
+        set_metadata(self.receipt, price=8.27, retailer='Bazaar', note='A note')
 
         self.assertEqual(self.receipt.price, 8.27)
         self.assertEqual(self.receipt.retailer, 'Bazaar')
+        self.assertEqual(self.receipt.note, 'A note')
 
         delete_metadata(self.receipt, price=True)
         self.assertEqual(self.receipt.price, None)
 
         delete_metadata(self.receipt, retailer=True)
         self.assertEqual(self.receipt.retailer, None)
+
+        delete_metadata(self.receipt, note=True)
+        self.assertEqual(self.receipt.note, None)
 
 class MakeReceiptTestCase(unittest.TestCase):
 

@@ -13,6 +13,7 @@ import pyexiv2
 
 PRICE_KEY = 'Xmp.pypel.Price'
 RETAILER_KEY = 'Xmp.pypel.Retailer'
+NOTE_KEY = 'Xmp.pypel.Note'
 
 SUPPORTED_EXT = ('.jpg', '.jpeg', '.png', '.eps')
 
@@ -75,11 +76,33 @@ class Receipt(object):
             pass
         self._metadata.write()
 
-def delete_metadata(receipt, price=None, retailer=None):
+    @property
+    def note(self):
+        try:
+            return self._metadata[NOTE_KEY].value
+        except KeyError:
+            pass
+
+    @note.setter
+    def note(self, note):
+        self._metadata[NOTE_KEY] = note
+        self._metadata.write()
+
+    @note.deleter
+    def note(self):
+        try:
+            del self._metadata[NOTE_KEY]
+        except KeyError:
+            pass
+        self._metadata.write()
+
+
+def delete_metadata(receipt, price=None, retailer=None, note=None):
     """Delete XMP metadata."""
-    if not price and not retailer:
+    if not price and not retailer and not note:
         del receipt.price
         del receipt.retailer
+        del receipt.note
 
     if price:
         del receipt.price
@@ -87,13 +110,21 @@ def delete_metadata(receipt, price=None, retailer=None):
     if retailer:
         del receipt.retailer
 
-def set_metadata(receipt, price=None, retailer=None):
+    if note:
+        del receipt.note
+
+
+def set_metadata(receipt, price=None, retailer=None, note=None):
     """Set XMP metadata."""
     if price:
         receipt.price = price
 
     if retailer:
         receipt.retailer = retailer
+
+    if note:
+        receipt.note = note
+
 
 def make_receipt(file):
     """Check for errors and create a receipt"""
