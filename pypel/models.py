@@ -11,9 +11,7 @@ import os.path
 
 import pyexiv2
 
-PRICE_KEY = 'Xmp.pypel.Price'
-RETAILER_KEY = 'Xmp.pypel.Retailer'
-NOTE_KEY = 'Xmp.pypel.Note'
+XMP_KEY_PREFIX = 'Xmp.pypel.'
 
 SUPPORTED_EXT = ('.jpg', '.jpeg', '.png', '.eps')
 
@@ -28,73 +26,74 @@ class IsADirectory(IOError):
 class ImageNotSupported(IOError):
     """Image is not supported"""
 
+class Field(object):
+    """Base class for all field types"""
 
-class Receipt(object):
+    casting_function = lambda self, value: value
+
+    def __init__(self):
+        self.name = None
+
+    @property
+    def key(self):
+        return XMP_KEY_PREFIX + self.name
+
+    def __get__(self, instance, owner):
+        return self.cast(instance.get_value(self.key))
+
+    def __set__(self, instance, value):
+        instance.set_value(self.key, value)
+
+    def __delete__(self, instance):
+        instance.delete_value(self.key)
+
+    def cast(self, value):
+        if value is not None:
+            return self.casting_function(value)
+
+class CharField(Field):
+    """A field for character strings"""
+
+class FloatField(Field):
+    """A field for float numbers"""
+
+    casting_function = float
+
+
+class Model(object):
 
     def __init__(self, file):
         self.file = file
         self._metadata = pyexiv2.ImageMetadata(file)
         self._metadata.read()
 
-    @property
-    def price(self):
-        try:
-            return float(self._metadata[PRICE_KEY].value)
-        except KeyError:
-            pass
+        for name in self.__class__.__dict__:
+            field = self.__class__.__dict__[name]
+            if isinstance(field, Field):
+                setattr(field, 'name', name.title())
 
-    @price.setter
-    def price(self, price):
-        self._metadata[PRICE_KEY] = str(price)
+    def get_value(self, key):
+        try:
+            return self._metadata[key].value
+        except KeyError:
+            return None
+
+    def set_value(self, key, value):
+        self._metadata[key] = str(value)
         self._metadata.write()
 
-    @price.deleter
-    def price(self):
+    def delete_value(self, key):
         try:
-            del self._metadata[PRICE_KEY]
-        except KeyError:
-            pass
-        self._metadata.write()
-
-    @property
-    def retailer(self):
-        try:
-            return self._metadata[RETAILER_KEY].value
-        except KeyError:
-            pass
-
-    @retailer.setter
-    def retailer(self, retailer):
-        self._metadata[RETAILER_KEY] = retailer
-        self._metadata.write()
-
-    @retailer.deleter
-    def retailer(self):
-        try:
-            del self._metadata[RETAILER_KEY]
+            del self._metadata[key]
         except KeyError:
             pass
         self._metadata.write()
 
-    @property
-    def note(self):
-        try:
-            return self._metadata[NOTE_KEY].value
-        except KeyError:
-            pass
 
-    @note.setter
-    def note(self, note):
-        self._metadata[NOTE_KEY] = note
-        self._metadata.write()
-
-    @note.deleter
-    def note(self):
-        try:
-            del self._metadata[NOTE_KEY]
-        except KeyError:
-            pass
-        self._metadata.write()
+class Receipt(Model):
+    price = FloatField()
+    retailer = CharField()
+    note = CharField()
 
 
 def delete_metadata(receipt, price=None, retailer=None, note=None):
