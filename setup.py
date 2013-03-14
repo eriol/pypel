@@ -11,7 +11,7 @@ import distutils.core
 import os.path
 
 
-from pypel import get_version
+from pypel import __version__
 
 
 def read(filename):
@@ -32,7 +32,7 @@ Topic :: Office/Business :: Financial
 
 distutils.core.setup(
     name = 'pypel',
-    version = get_version(),
+    version = __version__,
     license = 'BSD',
     description = 'simple tool to manage receipts',
     long_description = read('README'),

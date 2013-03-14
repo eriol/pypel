@@ -2,6 +2,9 @@ Release 0.2 (in development)
 ============================
 
 * Refactored Receipt class to use a class based model.
+* Enhanced version handling
+  - Added __version_info__ tuple and switched to __version__
+    for human readable form
 
 Release 0.1 (November 02, 2012)
 ===============================
