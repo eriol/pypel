@@ -51,6 +51,8 @@ def make_parsers():
                             help='set receipts\' price')
     set_parser.add_argument('-r', '--retailer', action='store', type=str,
                             help='set receipts\' retailer')
+    set_parser.add_argument('-n', '--note', action='store', type=str,
+                            help='set receipts\' note')
     set_parser.set_defaults(action=do_set)
 
     # A delete command
@@ -59,6 +61,8 @@ def make_parsers():
                             help='delete receipts\' price')
     del_parser.add_argument('-r', '--retailer', action='store_true',
                             help='delete receipts\' retailer')
+    del_parser.add_argument('-n', '--note', action='store_true',
+                            help='delete receipts\' note')
     del_parser.set_defaults(action=do_del)
 
     # A sum command
@@ -117,7 +121,8 @@ def do_show(args):
     for receipt in receipts(args):
         row = dict(receipt=receipt.file,
                    price=receipt.price,
-                   retailer=receipt.retailer)
+                   retailer=receipt.retailer,
+                   note=receipt.note)
 
         # Verify signature for the receipt if needed. If signature is
         # missing `verified' must be False.
@@ -143,7 +148,7 @@ def do_show(args):
         else:
             price_fmt = '{2:{3}.2f}'
 
-        fmt_str = '{0:{1}} -- ' + price_fmt + ' -- {4}'
+        fmt_str = '{0:{1}} -- ' + price_fmt + ' -- {4} -- {5}'
 
         if args.verify and not args.color:
             fmt_str += ' | {}'.format(row['verified'])
@@ -162,15 +167,16 @@ def do_show(args):
                              max_len_receipt_filename,
                              row['price'],
                              max_len_price + 1,
-                             row['retailer']))
+                             row['retailer'],
+                             row['note']))
 
 def do_set(args):
     for receipt in receipts(args):
-        set_metadata(receipt, args.price, args.retailer)
+        set_metadata(receipt, args.price, args.retailer, args.note)
 
 def do_del(args):
     for receipt in receipts(args):
-        delete_metadata(receipt, args.price, args.retailer)
+        delete_metadata(receipt, args.price, args.retailer, args.note)
 
 def do_sum(args):
     price_sum = 0
@@ -211,9 +217,9 @@ def main():
     args = parser.parse_args()
 
     if args.command_name == 'set':
-        if args.price is None and args.retailer is None:
+        if args.price is None and args.retailer is None and args.note is None:
             subparsers['set_parser'].error('You must provide at least '
-                                           '--price or --retailer')
+                                           '--price or --retailer or --note')
     elif args.command_name == 'gpg':
         if not args.sign and not args.verify:
             subparsers['gpg_parser'].error('You must provide at least '
