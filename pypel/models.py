@@ -59,18 +59,26 @@ class FloatField(Field):
 
     casting_function = float
 
+class ModelBase(type):
+    """Metaclass for models"""
+
+    def __init__(cls, name, bases, attrs):
+
+        for name in attrs:
+            if isinstance(attrs[name], Field):
+                # Set field name because it is required for key generation
+                setattr(attrs[name], 'name', name.title())
+
+        super(ModelBase, cls).__init__(name, bases, attrs)
 
 class Model(object):
+
+    __metaclass__ = ModelBase
 
     def __init__(self, file):
         self.file = file
         self._metadata = pyexiv2.ImageMetadata(file)
         self._metadata.read()
-
-        for name in self.__class__.__dict__:
-            field = self.__class__.__dict__[name]
-            if isinstance(field, Field):
-                setattr(field, 'name', name.title())
 
     def get_value(self, key):
         try:
@@ -98,6 +106,7 @@ class Receipt(Model):
 
 def delete_metadata(receipt, price=None, retailer=None, note=None):
     """Delete XMP metadata."""
+
     if not price and not retailer and not note:
         del receipt.price
         del receipt.retailer
@@ -115,6 +124,7 @@ def delete_metadata(receipt, price=None, retailer=None, note=None):
 
 def set_metadata(receipt, price=None, retailer=None, note=None):
     """Set XMP metadata."""
+
     if price:
         receipt.price = price
 
