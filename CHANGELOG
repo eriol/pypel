@@ -1,7 +1,8 @@
 Release 0.2 (in development)
 ============================
 
-* Refactored Receipt class to use a class based model.
+* Refactored Receipt class to use a class based model
+* Added note field
 * Enhanced version handling
   - Added __version_info__ tuple and switched to __version__
     for human readable form
