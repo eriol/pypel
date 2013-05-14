@@ -1,6 +1,7 @@
 syntax:glob
 *~
 *.pyc
+*.coverage
 MANIFEST
 dist
 docs/_build
