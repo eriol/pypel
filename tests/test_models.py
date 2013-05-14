@@ -100,6 +100,14 @@ class ReceiptMetadataTestCase(ReceiptSetUpTestCase):
         delete_metadata(self.receipt, note=True)
         self.assertEqual(self.receipt.note, None)
 
+        set_metadata(self.receipt, price=8.27, retailer='Bazaar', note='A note')
+        delete_metadata(self.receipt)
+
+        self.assertEqual(self.receipt.price, None)
+        self.assertEqual(self.receipt.retailer, None)
+        self.assertEqual(self.receipt.note, None)
+
+
 class MakeReceiptTestCase(unittest.TestCase):
 
     def setUp(self):
