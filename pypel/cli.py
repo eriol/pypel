@@ -26,9 +26,10 @@ try:
 except ImportError:
     gnupg = False
 from pypel.models import (delete_metadata, set_metadata, make_receipt,
-    DoesNotExist, IsADirectory, ImageNotSupported)
+                          DoesNotExist, IsADirectory, ImageNotSupported)
 
 PYPELKEY = os.environ.get('PYPELKEY')
+
 
 def make_parsers():
     """Create the parsers for the CLI tool."""
@@ -73,9 +74,9 @@ def make_parsers():
     gpg_parser = subparsers.add_parser('gpg', help='Sign or verify receipts')
     gpg_group = gpg_parser.add_mutually_exclusive_group()
     gpg_group.add_argument('-s', '--sign', action='store_true',
-                            help='sign receipts')
+                           help='sign receipts')
     gpg_group.add_argument('-v', '--verify', action='store_true',
-                            help='verify receipts')
+                           help='verify receipts')
     gpg_parser.set_defaults(action=do_gpg)
 
     all_subparsers = dict(
@@ -96,6 +97,7 @@ def make_parsers():
 
     return parser, all_subparsers
 
+
 def receipts(args):
     for receipt_file in args.receipts:
 
@@ -111,6 +113,7 @@ def receipts(args):
         except ImageNotSupported as e:
             # Skip if receipt_file is not a supported file.
             continue
+
 
 def do_show(args):
     # TODO: use jinja2
@@ -170,13 +173,16 @@ def do_show(args):
                              row['retailer'],
                              row['note']))
 
+
 def do_set(args):
     for receipt in receipts(args):
         set_metadata(receipt, args.price, args.retailer, args.note)
 
+
 def do_del(args):
     for receipt in receipts(args):
         delete_metadata(receipt, args.price, args.retailer, args.note)
+
 
 def do_sum(args):
     price_sum = 0
@@ -185,6 +191,7 @@ def do_sum(args):
             price_sum += receipt.price
 
     print('{0:.2f}'.format(price_sum))
+
 
 def do_gpg(args):
     if gnupg:
@@ -197,12 +204,12 @@ def do_gpg(args):
                     verified = verify(receipt.file)
                     if verified:
                         print('Good signature from "{}"'.format(
-                                verified.username))
+                              verified.username))
                         d = datetime.fromtimestamp(float(verified.timestamp))
                         print('Signature made {} {} using key ID {}'.format(
-                                d.isoformat(' '),
-                                time.tzname[time.daylight],
-                                verified.key_id))
+                              d.isoformat(' '),
+                              time.tzname[time.daylight],
+                              verified.key_id))
                 except ValueError as err:
                     print('{}: {}'.format(receipt.file, err))
                 except IOError as err:
@@ -210,6 +217,7 @@ def do_gpg(args):
     else:
         warnings.warn('You must install gnupg module to sign and verify'
                       ' receipts.')
+
 
 def main():
 
