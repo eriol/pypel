@@ -70,7 +70,7 @@ Set receipts' metadata
 
 ::
 
-    pypel set [-h] [-p PRICE] [-r RETAILER] receipt [receipt ...]
+    pypel set [-h] [-p PRICE] [-r RETAILER] [-n NOTE] receipt [receipt ...]
 
 .. program:: pypel set
 
@@ -82,6 +82,10 @@ Set receipts' metadata
 
    Set receipt's retailer to ``RETAILER``.
 
+.. cmdoption:: -n NOTE, --note NOTE
+
+   Set receipt's note to ``NOTE``.
+
 .. _command-del:
 
 Delete receipts' metadata
@@ -89,7 +93,7 @@ Delete receipts' metadata
 
 ::
 
-    pypel del [-h] [-p] [-r] receipt [receipt ...]
+    pypel del [-h] [-p] [-r] [-n] receipt [receipt ...]
 
 .. program:: pypel del
 
@@ -100,6 +104,10 @@ Delete receipts' metadata
 .. cmdoption:: -r, --retailer
 
    Delete receipt's retailer.
+
+.. cmdoption:: -n, --note
+
+   Delete receipt's note.
 
 .. _command-sum:
 
