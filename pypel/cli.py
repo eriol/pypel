@@ -39,7 +39,8 @@ def make_parsers():
     subparsers = parser.add_subparsers(dest='command_name', help='commands')
 
     # A show command
-    show_parser = subparsers.add_parser('show', help='Show receipts\' metadata')
+    show_parser = subparsers.add_parser('show',
+                                        help='Show receipts\' metadata')
     show_parser.add_argument('-v', '--verify', action='store_true',
                              help='verify receipts')
     show_parser.add_argument('-c', '--color', action='store_true',
@@ -57,7 +58,8 @@ def make_parsers():
     set_parser.set_defaults(action=do_set)
 
     # A delete command
-    del_parser = subparsers.add_parser('del', help='Delete receipts\' metadata')
+    del_parser = subparsers.add_parser('del',
+                                       help='Delete receipts\' metadata')
     del_parser.add_argument('-p', '--price', action='store_true',
                             help='delete receipts\' price')
     del_parser.add_argument('-r', '--retailer', action='store_true',
@@ -92,8 +94,8 @@ def make_parsers():
         all_subparsers[subparser].add_argument('receipts',
                                                metavar='receipt',
                                                nargs='+',
-                                               help='one or more receipts in a '
-                                                    'supported format')
+                                               help='one or more receipts in a'
+                                                    ' supported format')
 
     return parser, all_subparsers
 

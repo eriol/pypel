@@ -17,14 +17,18 @@ SUPPORTED_EXT = ('.jpg', '.jpeg', '.png', '.eps')
 
 pyexiv2.xmp.register_namespace('http://mornie.org/xmp/pypel/', 'pypel')
 
+
 class DoesNotExist(IOError):
     """The file or directory does not exist"""
+
 
 class IsADirectory(IOError):
     """This is a directory so you can't use it as a receipt"""
 
+
 class ImageNotSupported(IOError):
     """Image is not supported"""
+
 
 class Field(object):
     """Base class for all field types"""
@@ -51,13 +55,16 @@ class Field(object):
         if value is not None:
             return self.casting_function(value)
 
+
 class CharField(Field):
     """A field for character strings"""
+
 
 class FloatField(Field):
     """A field for float numbers"""
 
     casting_function = float
+
 
 class ModelBase(type):
     """Metaclass for models"""
@@ -70,6 +77,7 @@ class ModelBase(type):
                 setattr(attrs[name], 'name', name.title())
 
         super(ModelBase, cls).__init__(name, bases, attrs)
+
 
 class Model(object):
 
