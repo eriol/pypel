@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 #
 # pypel documentation build configuration file, created by
 # sphinx-quickstart on Thu Oct 25 03:25:39 2012.
@@ -41,7 +41,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pypel'
-copyright = u'2012, Daniele Tricoli'
+copyright = u'2012-2013, Daniele Tricoli'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
