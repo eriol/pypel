@@ -9,13 +9,11 @@ Read LICENSE for more informations.
 
 import os.path
 
-import pyexiv2
+from gi.repository import GExiv2
 
 XMP_KEY_PREFIX = 'Xmp.pypel.'
 
 SUPPORTED_EXT = ('.jpg', '.jpeg', '.png', '.eps')
-
-pyexiv2.xmp.register_namespace('http://mornie.org/xmp/pypel/', 'pypel')
 
 
 class DoesNotExist(IOError):
@@ -85,25 +83,27 @@ class Model(object):
 
     def __init__(self, file):
         self.file = file
-        self._metadata = pyexiv2.ImageMetadata(file)
-        self._metadata.read()
+        self._metadata = GExiv2.Metadata(file)
+
+        if not self._metadata.has_xmp():
+            self._metadata.register_xmp_namespace('pypelNamespace/', 'pypel')
 
     def get_value(self, key):
         try:
-            return self._metadata[key].value
+            return self._metadata[key]
         except KeyError:
             return None
 
     def set_value(self, key, value):
         self._metadata[key] = str(value)
-        self._metadata.write()
+        self._metadata.save_file()
 
     def delete_value(self, key):
         try:
             del self._metadata[key]
         except KeyError:
             pass
-        self._metadata.write()
+        self._metadata.save_file()
 
 
 class Receipt(Model):
