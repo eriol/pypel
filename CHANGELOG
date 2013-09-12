@@ -2,6 +2,7 @@ Release 0.3 (in development)
 ============================
 
 * Switched to GExiv2
+* Added Python3 support
 
 Release 0.2 (September 12, 2013)
 ================================

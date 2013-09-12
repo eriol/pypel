@@ -27,6 +27,7 @@ License :: OSI Approved :: BSD License
 Operating System :: POSIX
 Programming Language :: Python
 Programming Language :: Python :: 2
+Programming Language :: Python :: 3
 Topic :: Office/Business :: Financial
 '''.strip().splitlines()
 

@@ -9,6 +9,8 @@ Read LICENSE for more informations.
 
 import os.path
 
+import six
+
 from gi.repository import GExiv2
 
 XMP_KEY_PREFIX = 'Xmp.pypel.'
@@ -77,9 +79,7 @@ class ModelBase(type):
         super(ModelBase, cls).__init__(name, bases, attrs)
 
 
-class Model(object):
-
-    __metaclass__ = ModelBase
+class Model(six.with_metaclass(ModelBase)):
 
     def __init__(self, file):
         self.file = file
