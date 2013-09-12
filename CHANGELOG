@@ -1,5 +1,5 @@
-Release 0.2 (in development)
-============================
+Release 0.2 (September 12, 2013)
+================================
 
 * Refactored Receipt class to use a class based model
 * Added note field
