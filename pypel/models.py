@@ -55,6 +55,9 @@ class Field(object):
         if value is not None:
             return self.casting_function(value)
 
+    def __repr__(self):
+        return '<{}: {}>'.format(self.__class__.__name__, self.name)
+
 
 class CharField(Field):
     """A field for character strings"""
