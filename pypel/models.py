@@ -105,6 +105,9 @@ class Model(six.with_metaclass(ModelBase)):
             pass
         self._metadata.save_file()
 
+    def __repr__(self):
+        return '<{}: {}>'.format(self.__class__.__name__, self.file)
+
 
 class Receipt(Model):
     price = FloatField()
