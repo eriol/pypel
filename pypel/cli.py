@@ -31,6 +31,70 @@ from pypel.models import (delete_metadata, set_metadata, make_receipt,
 PYPELKEY = os.environ.get('PYPELKEY')
 
 
+class Row(dict):
+    """Representation of a receipt as a row for terminal output."""
+
+    def __init__(self, receipt):
+        self['filename'] = receipt.file
+        for field in receipt._fields:
+            name = field.name.lower()
+            self[name] = getattr(receipt, name)
+
+    @property
+    def len_filename(self):
+        return len(str(self['filename']))
+
+    @property
+    def len_price(self):
+        return len(str(self['price']))
+
+
+class Table(object):
+
+    def __init__(self):
+        self.max_len_filename = 0
+        self.max_len_price = 0
+        self.rows = []
+
+    def add_row(self, row):
+        self.rows.append(row)
+
+        self.max_len_receipt_filename = max((row.len_filename,
+                                             self.max_len_filename))
+        self.max_len_receipt_price = max((row.len_price,
+                                          self.max_len_price))
+
+    def to_terminal(self, args):
+
+        for row in self.rows:
+            if row['price'] is None:
+                price_fmt = '{2:^{3}}'
+            else:
+                price_fmt = '{2:{3}.2f}'
+
+            fmt_str = '{0:{1}} -- ' + price_fmt + ' -- {4} -- {5}'
+
+            if args.verify and not args.color:
+                fmt_str += ' | {}'.format(row['verified'])
+
+            if args.verify and args.color:
+                if ansiformat:
+                    if row['verified']:
+                        fmt_str = ansiformat('green', fmt_str)
+                    else:
+                        fmt_str = ansiformat('red', fmt_str)
+                else:
+                    warnings.warn('You must install pygments to have colored '
+                                  'output.')
+
+            yield fmt_str.format(row['filename'],
+                                 self.max_len_receipt_filename,
+                                 row['price'],
+                                 self.max_len_price + 1,
+                                 row['retailer'],
+                                 row['note'])
+
+
 def make_parsers():
     """Create the parsers for the CLI tool."""
 
@@ -118,16 +182,11 @@ def receipts(args):
 
 
 def do_show(args):
-    # TODO: use jinja2
-    table = []
-    max_len_receipt_filename = 0
-    max_len_price = 0
+
+    table = Table()
 
     for receipt in receipts(args):
-        row = dict(receipt=receipt.file,
-                   price=receipt.price,
-                   retailer=receipt.retailer,
-                   note=receipt.note)
+        row = Row(receipt)
 
         # Verify signature for the receipt if needed. If signature is
         # missing `verified' must be False.
@@ -142,38 +201,9 @@ def do_show(args):
 
             row.update(dict(verified=verified))
 
-        table.append(row)
-        max_len_receipt_filename = max([len(receipt.file),
-                                        max_len_receipt_filename])
-        max_len_price = max([len(str(receipt.price)), max_len_price])
+        table.add_row(row)
 
-    for row in table:
-        if row['price'] is None:
-            price_fmt = '{2:^{3}}'
-        else:
-            price_fmt = '{2:{3}.2f}'
-
-        fmt_str = '{0:{1}} -- ' + price_fmt + ' -- {4} -- {5}'
-
-        if args.verify and not args.color:
-            fmt_str += ' | {}'.format(row['verified'])
-
-        if args.verify and args.color:
-            if ansiformat:
-                if row['verified']:
-                    fmt_str = ansiformat('green', fmt_str)
-                else:
-                    fmt_str = ansiformat('red', fmt_str)
-            else:
-                warnings.warn('You must install pygments to have colored '
-                              'output.')
-
-        print(fmt_str.format(row['receipt'],
-                             max_len_receipt_filename,
-                             row['price'],
-                             max_len_price + 1,
-                             row['retailer'],
-                             row['note']))
+    print('\n'.join(table.to_terminal(args)))
 
 
 def do_set(args):
