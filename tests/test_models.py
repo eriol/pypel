@@ -10,12 +10,10 @@ Read LICENSE for more informations.
 import tempfile
 import unittest
 
+from PIL import Image
 
-import cairo
-
-
-from pypel.models import (Receipt, set_metadata, delete_metadata, make_receipt,
-    DoesNotExist, IsADirectory, ImageNotSupported)
+from pypel.models import Receipt, set_metadata, delete_metadata, make_receipt
+from pypel.models import DoesNotExist, IsADirectory, ImageNotSupported
 
 
 class ReceiptSetUpTestCase(unittest.TestCase):
@@ -26,15 +24,14 @@ class ReceiptSetUpTestCase(unittest.TestCase):
         self.tmp_file = tempfile.NamedTemporaryFile()
 
         self.size = 100, 100
-        self.image = cairo.ImageSurface(cairo.FORMAT_RGB24,
-                                        self.size[0],
-                                        self.size[1])
-        self.image.write_to_png(self.tmp_file.name)
+        self.image = Image.new('RGB', self.size)
+        self.image.save(self.tmp_file.name, format='PNG')
 
         self.receipt = Receipt(self.tmp_file.name)
 
     def tearDown(self):
         self.tmp_file.close()
+
 
 class ReceiptMetadataTestCase(ReceiptSetUpTestCase):
 
@@ -85,7 +82,10 @@ class ReceiptMetadataTestCase(ReceiptSetUpTestCase):
     def test_delete_metadata(self):
         """Test delete_metadata command."""
 
-        set_metadata(self.receipt, price=8.27, retailer='Bazaar', note='A note')
+        set_metadata(self.receipt,
+                     price=8.27,
+                     retailer='Bazaar',
+                     note='A note')
 
         self.assertEqual(self.receipt.price, 8.27)
         self.assertEqual(self.receipt.retailer, 'Bazaar')
@@ -100,7 +100,10 @@ class ReceiptMetadataTestCase(ReceiptSetUpTestCase):
         delete_metadata(self.receipt, note=True)
         self.assertEqual(self.receipt.note, None)
 
-        set_metadata(self.receipt, price=8.27, retailer='Bazaar', note='A note')
+        set_metadata(self.receipt,
+                     price=8.27,
+                     retailer='Bazaar',
+                     note='A note')
         delete_metadata(self.receipt)
 
         self.assertEqual(self.receipt.price, None)
@@ -115,10 +118,10 @@ class MakeReceiptTestCase(unittest.TestCase):
         self.tmp_file_txt = tempfile.NamedTemporaryFile(suffix='.txt')
 
         self.size = 10, 10
-        self.image = cairo.ImageSurface(cairo.FORMAT_RGB24,
-                                        self.size[0],
-                                        self.size[1])
-        self.image.write_to_png(self.tmp_file_png.name)
+        self.image = Image.new('RGB', self.size)
+        self.image.save(self.tmp_file_png.name, format='PNG')
+
+        self.receipt = Receipt(self.tmp_file_png.name)
 
     def tearDown(self):
         self.tmp_file_png.close()

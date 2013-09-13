@@ -1,8 +1,9 @@
 Release 0.3 (in development)
 ============================
 
-* Switched to GExiv2
 * Added Python3 support
+* Switched to GExiv2
+* Switched to Pillow for testing
 
 Release 0.2 (September 12, 2013)
 ================================
