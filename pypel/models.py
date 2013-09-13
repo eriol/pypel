@@ -71,10 +71,15 @@ class ModelBase(type):
 
     def __init__(cls, name, bases, attrs):
 
+        if not hasattr(cls, '_fields'):
+            cls._fields = []
+
         for name in attrs:
             if isinstance(attrs[name], Field):
                 # Set field name because it is required for key generation
                 setattr(attrs[name], 'name', name.title())
+
+                cls._fields.append(attrs[name])
 
         super(ModelBase, cls).__init__(name, bases, attrs)
 
