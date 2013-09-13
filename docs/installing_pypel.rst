@@ -1,13 +1,17 @@
 Installing pypel
 ================
 
-``pypel`` requires `pyexiv2 <http://tilloy.net/dev/pyexiv2/>`_
-version 0.3.2 or superior.
+``pypel`` requires `GExiv2 <http://redmine.yorba.org/projects/gexiv2/wiki>`_
+Python binding version 0.6.1 or superior and
+`Six <http://pypi.python.org/pypi/six/>`_ version 1.3.0 or superior.
 
 Optionally you can also install `Pygments <http://pygments.org/>`_ version 1.5
 or superior (for console coloured output) and
 `python-gnupg <http://code.google.com/p/python-gnupg/>`_  version 0.3.0 or
 superior (for signing and verifying receipts).
+
+To run the testsuite you need `Pillow <http://python-imaging.github.io/>`_
+version 2.0.0 or superior.
 
 You can choose to install ``pypel`` automatically or manually.
 
