@@ -34,45 +34,61 @@ PYPELKEY = os.environ.get('PYPELKEY')
 class Row(dict):
     """Representation of a receipt as a row for terminal output."""
 
+    FLOAT_PRECISION = '.2'
+
     def __init__(self, receipt):
         self['filename'] = receipt.file
         for field in receipt._fields:
             name = field.name.lower()
             self[name] = getattr(receipt, name)
 
-    @property
-    def len_filename(self):
-        return len(str(self['filename']))
+    def len(self, key=None):
+        """Return len of specified field"""
+        if key is not None:
+            if isinstance(self[key], float):
+                fmt = '%%%sf' % Row.FLOAT_PRECISION
+                return len(str(fmt % self[key]))
 
-    @property
-    def len_price(self):
-        return len(str(self['price']))
+            return len(str(self[key]))
+
+    def format(self, key, align='', precision='', type_=''):
+        if isinstance(self[key], float):
+            align = '>'
+            precision = Row.FLOAT_PRECISION
+            type_ = 'f'
+
+        return '{%s:%s{%s}%s%s}' % (key,
+                                    align,
+                                    key + '_len',
+                                    precision,
+                                    type_)
 
 
 class Table(object):
 
     def __init__(self):
-        self.max_len_filename = 0
-        self.max_len_price = 0
+        self.max_len = {}
         self.rows = []
 
     def add_row(self, row):
         self.rows.append(row)
 
-        self.max_len_receipt_filename = max((row.len_filename,
-                                             self.max_len_filename))
-        self.max_len_receipt_price = max((row.len_price,
-                                          self.max_len_price))
+        if not self.max_len:
+            self.max_len.update({column + '_len': 0 for column in row})
 
-    def to_terminal(self, args):
+        for column in row:
+            key_len = column + '_len'
+            self.max_len[key_len] = max((row.len(column),
+                                         self.max_len[key_len]))
+
+    def to_string(self, args, fields_order=None, sep=' -- '):
+
+        if fields_order is None:
+            fields_order = ['filename', 'price', 'retailer', 'note']
 
         for row in self.rows:
-            if row['price'] is None:
-                price_fmt = '{2:^{3}}'
-            else:
-                price_fmt = '{2:{3}.2f}'
 
-            fmt_str = '{0:{1}} -- ' + price_fmt + ' -- {4} -- {5}'
+            fmt_str = sep.join([row.format(field) for field in fields_order])
 
             if args.verify and not args.color:
                 fmt_str += ' | {}'.format(row['verified'])
@@ -87,12 +103,9 @@ class Table(object):
                     warnings.warn('You must install pygments to have colored '
                                   'output.')
 
-            yield fmt_str.format(row['filename'],
-                                 self.max_len_receipt_filename,
-                                 row['price'],
-                                 self.max_len_price + 1,
-                                 row['retailer'],
-                                 row['note'])
+            fields = row.copy()
+            fields.update(self.max_len)
+            yield fmt_str.format(**fields)
 
 
 def make_parsers():
@@ -203,7 +216,7 @@ def do_show(args):
 
         table.add_row(row)
 
-    print('\n'.join(table.to_terminal(args)))
+    print('\n'.join(table.to_string(args)))
 
 
 def do_set(args):
