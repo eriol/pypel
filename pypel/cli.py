@@ -37,7 +37,7 @@ class Row(dict):
     FLOAT_PRECISION = '.2'
 
     def __init__(self, receipt):
-        self['filename'] = receipt.file
+        self['file'] = receipt.file
         for field in receipt._fields:
             name = field.name.lower()
             self[name] = getattr(receipt, name)
@@ -84,7 +84,7 @@ class Table(object):
     def to_string(self, args, fields_order=None, sep=' -- '):
 
         if fields_order is None:
-            fields_order = ['filename', 'price', 'retailer', 'note']
+            fields_order = ['file', 'price', 'retailer', 'note']
 
         for row in self.rows:
 

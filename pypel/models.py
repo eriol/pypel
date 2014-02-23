@@ -113,6 +113,14 @@ class Model(six.with_metaclass(ModelBase)):
             pass
         self._metadata.save_file()
 
+    def asdict(self):
+        d = {'file': self.file}
+        for field in self._fields:
+            name = field.name.lower()
+            d[name] = getattr(self, name)
+
+        return d
+
     def __repr__(self):
         return '<{}: {}>'.format(self.__class__.__name__, self.file)
 

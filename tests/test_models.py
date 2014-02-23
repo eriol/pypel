@@ -110,6 +110,17 @@ class ReceiptMetadataTestCase(ReceiptSetUpTestCase):
         self.assertEqual(self.receipt.retailer, None)
         self.assertEqual(self.receipt.note, None)
 
+    def test_asdict(self):
+        set_metadata(self.receipt,
+                     price=8.27,
+                     retailer='Bazaar',
+                     note='A note')
+        self.assertEqual(self.receipt.asdict(),
+                         {'file': self.tmp_file.name,
+                          'price': 8.27,
+                          'retailer': 'Bazaar',
+                          'note': 'A note'})
+
 
 class MakeReceiptTestCase(unittest.TestCase):
 
