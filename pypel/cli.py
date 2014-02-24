@@ -36,11 +36,9 @@ class Row(dict):
 
     FLOAT_PRECISION = '.2'
 
-    def __init__(self, receipt):
-        self['file'] = receipt.file
-        for field in receipt._fields:
-            name = field.name.lower()
-            self[name] = getattr(receipt, name)
+    def __init__(self, dct=None):
+        if dct is not None:
+            self.update(dct)
 
     def len(self, key=None):
         """Return len of specified field"""
@@ -199,7 +197,7 @@ def do_show(args):
     table = Table()
 
     for receipt in receipts(args):
-        row = Row(receipt)
+        row = Row(receipt.asdict())
 
         # Verify signature for the receipt if needed. If signature is
         # missing `verified' must be False.
