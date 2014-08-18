@@ -34,9 +34,13 @@ class Field(object):
     """Base class for all field types"""
 
     casting_function = lambda self, value: value
+    creation_counter = 1
 
     def __init__(self):
         self.name = None
+
+        self.creation_counter = Field.creation_counter
+        Field.creation_counter += 1
 
     @property
     def key(self):
@@ -83,6 +87,8 @@ class ModelBase(type):
                 setattr(attrs[name], 'name', name.title())
 
                 cls._fields.append(attrs[name])
+
+        cls._fields.sort(key=lambda field: field.creation_counter)
 
         super(ModelBase, cls).__init__(name, bases, attrs)
 
