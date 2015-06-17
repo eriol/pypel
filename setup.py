@@ -39,7 +39,7 @@ distutils.core.setup(
     version = __version__,
     license = 'BSD',
     description = 'simple tool to manage receipts',
-    long_description = read('README'),
+    long_description = read('README.rst'),
     classifiers = classifiers,
     url = 'http://mornie.org/projects/pypel/',
     author = 'Daniele Tricoli',
