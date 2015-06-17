@@ -1,7 +1,8 @@
-*~
-*.swp
-*.pyc
 *.coverage
+*.pyc
+*.swp
+*~
+.tox/
 MANIFEST
 dist
 docs/_build
