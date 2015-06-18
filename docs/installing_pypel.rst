@@ -1,7 +1,7 @@
 Installing pypel
 ================
 
-``pypel`` requires `GExiv2 <http://redmine.yorba.org/projects/gexiv2/wiki>`_
+``pypel`` requires `GExiv2 <https://wiki.gnome.org/Projects/gexiv2>`_
 Python binding version 0.6.1 or superior and
 `Six <http://pypi.python.org/pypi/six/>`_ version 1.3.0 or superior.
 
