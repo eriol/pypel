@@ -10,7 +10,7 @@ or superior (for console coloured output) and
 `python-gnupg <https://pythonhosted.org/python-gnupg/>`_  version 0.3.0 or
 superior (for signing and verifying receipts).
 
-To run the testsuite you need `Pillow <http://python-imaging.github.io/>`_
+To run the testsuite you need `Pillow <https://python-pillow.github.io/>`_
 version 2.0.0 or superior.
 
 You can choose to install ``pypel`` automatically or manually.
