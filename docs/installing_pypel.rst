@@ -7,7 +7,7 @@ Python binding version 0.6.1 or superior and
 
 Optionally you can also install `Pygments <http://pygments.org/>`_ version 1.5
 or superior (for console coloured output) and
-`python-gnupg <http://code.google.com/p/python-gnupg/>`_  version 0.3.0 or
+`python-gnupg <https://pythonhosted.org/python-gnupg/>`_  version 0.3.0 or
 superior (for signing and verifying receipts).
 
 To run the testsuite you need `Pillow <http://python-imaging.github.io/>`_
