@@ -7,8 +7,6 @@ Copyright (c) 2012-2015 Daniele Tricoli <eriol@mornie.org>
 Read LICENSE for more informations.
 """
 
-import os.path
-
 import gnupg
 
 gpg = gnupg.GPG()
