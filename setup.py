@@ -2,7 +2,7 @@
 """pypel setup file.
 
 THIS SOFTWARE IS UNDER BSD LICENSE.
-Copyright (c) 2012-2013 Daniele Tricoli <eriol@mornie.org>
+Copyright (c) 2012-2015 Daniele Tricoli <eriol@mornie.org>
 
 Read LICENSE for more informations.
 """
