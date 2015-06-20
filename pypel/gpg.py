@@ -11,8 +11,10 @@ import gnupg
 
 gpg = gnupg.GPG()
 
+
 def _sign_file_path(file_path):
     return file_path + '.sig'
+
 
 def sign(file_path, keyid=None):
 
