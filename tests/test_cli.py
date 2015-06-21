@@ -9,7 +9,7 @@ Read LICENSE for more informations.
 
 import unittest
 
-from pypel.cli import Row
+from pypel.cli import Row, Table
 
 
 class RowTestCase(unittest.TestCase):
@@ -39,3 +39,19 @@ class RowTestCase(unittest.TestCase):
         row = Row({'note': 'A simply note.'})
         self.assertEqual(row.len('note'), 14)
         self.assertEqual(row.format('note'), '{note:{note_len}}')
+
+
+class TableTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.table = Table()
+
+    def test_empty(self):
+        self.assertEqual(self.table.rows, [])
+        self.assertEqual(self.table.max_len, {})
+
+    def test_add_new_row(self):
+        row = Row({'price': 2.71, 'note': 'An useless note.'})
+        self.table.add_row(row)
+
+        self.assertEqual(len(self.table.rows), 1)
