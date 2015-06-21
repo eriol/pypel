@@ -21,12 +21,12 @@ except ImportError:
 
 from pypel import get_version
 try:
-    from pypel.gpg import sign, verify
+    from .gpg import sign, verify
     gnupg = True
 except ImportError:
     gnupg = False
-from pypel.models import (delete_metadata, set_metadata, make_receipt,
-                          DoesNotExist, IsADirectory, ImageNotSupported)
+from .models import (delete_metadata, set_metadata, make_receipt,
+                     DoesNotExist, IsADirectory, ImageNotSupported)
 
 PYPELKEY = os.environ.get('PYPELKEY')
 
