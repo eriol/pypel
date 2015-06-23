@@ -76,3 +76,8 @@ class TableToStringTestCase(unittest.TestCase):
         order = ['price', 'note', 'file', 'retailer']
         self.assertEqual(''.join(self.table.to_string(fields_order=order)),
                          '2.71 -- An useless note. -- receipt.jpg -- カオナシ')
+
+    def test_separator(self):
+        sep = ' * '
+        self.assertEqual(''.join(self.table.to_string(sep=sep)),
+                         'receipt.jpg * 2.71 * カオナシ * An useless note.')
