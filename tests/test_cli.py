@@ -60,3 +60,19 @@ class TableTestCase(unittest.TestCase):
         self.assertEqual(len(self.table.rows), 1)
         self.assertEqual(''.join(self.table.to_string()),
                          'receipt.jpg -- 2.71 -- カオナシ -- An useless note.')
+
+
+class TableToStringTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.table = Table()
+        row = Row({'file': 'receipt.jpg',
+                   'price': 2.71,
+                   'retailer': 'カオナシ',
+                   'note': 'An useless note.'})
+        self.table.add_row(row)
+
+    def test_fields_order(self):
+        order = ['price', 'note', 'file', 'retailer']
+        self.assertEqual(''.join(self.table.to_string(fields_order=order)),
+                         '2.71 -- An useless note. -- receipt.jpg -- カオナシ')
