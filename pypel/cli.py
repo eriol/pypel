@@ -79,7 +79,11 @@ class Table(object):
             self.max_len[key_len] = max((row.len(column),
                                          self.max_len[key_len]))
 
-    def to_string(self, args, fields_order=None, sep=' -- '):
+    def to_string(self,
+                  color=False,
+                  fields_order=None,
+                  sep=' -- ',
+                  verify=False):
 
         if fields_order is None:
             fields_order = ['file', 'price', 'retailer', 'note']
@@ -88,10 +92,10 @@ class Table(object):
 
             fmt_str = sep.join([row.format(field) for field in fields_order])
 
-            if args.verify and not args.color:
+            if verify and not color:
                 fmt_str += ' | {}'.format(row['verified'])
 
-            if args.verify and args.color:
+            if verify and color:
                 if ansiformat:
                     if row['verified']:
                         fmt_str = ansiformat('green', fmt_str)
@@ -214,7 +218,7 @@ def do_show(args):
 
         table.add_row(row)
 
-    print('\n'.join(table.to_string(args)))
+    print('\n'.join(table.to_string(color=args.color, verify=args.verify)))
 
 
 def do_set(args):
