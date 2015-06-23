@@ -51,7 +51,12 @@ class TableTestCase(unittest.TestCase):
         self.assertEqual(self.table.max_len, {})
 
     def test_add_new_row(self):
-        row = Row({'price': 2.71, 'note': 'An useless note.'})
+        row = Row({'file': 'receipt.jpg',
+                   'price': 2.71,
+                   'retailer': 'カオナシ',
+                   'note': 'An useless note.'})
         self.table.add_row(row)
 
         self.assertEqual(len(self.table.rows), 1)
+        self.assertEqual(''.join(self.table.to_string()),
+                         'receipt.jpg -- 2.71 -- カオナシ -- An useless note.')
