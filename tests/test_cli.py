@@ -81,3 +81,13 @@ class TableToStringTestCase(unittest.TestCase):
         sep = ' * '
         self.assertEqual(''.join(self.table.to_string(sep=sep)),
                          'receipt.jpg * 2.71 * カオナシ * An useless note.')
+
+    def test_verify(self):
+        self.table.rows[0].update(dict(verified=False))
+        self.assertEqual(''.join(self.table.to_string(verify=True)),
+                         'receipt.jpg -- 2.71 -- カオナシ -- An useless note.'
+                         ' | False')
+        self.table.rows[0].update(dict(verified=True))
+        self.assertEqual(''.join(self.table.to_string(verify=True)),
+                         'receipt.jpg -- 2.71 -- カオナシ -- An useless note.'
+                         ' | True')
