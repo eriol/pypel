@@ -21,4 +21,3 @@ inside receipts so you can share them in a very easy way.
    licensing
 
 :Release: |version|
-:Date: September 12, 2013
