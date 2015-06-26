@@ -1,6 +1,9 @@
 Installing pypel
 ================
 
+Dependencies
+------------
+
 ``pypel`` requires `GExiv2 <https://wiki.gnome.org/Projects/gexiv2>`_
 Python binding version 0.6.1 or superior and
 `Six <http://pypi.python.org/pypi/six/>`_ version 1.3.0 or superior.
@@ -13,10 +16,8 @@ superior (for signing and verifying receipts).
 To run the testsuite you need `Pillow <https://python-pillow.github.io/>`_
 version 2.0.0 or superior.
 
-You can choose to install ``pypel`` automatically or manually.
-
-Automatic installation
-----------------------
+Installation
+------------
 
 Simply install ``pypel`` using ``pip``::
 
@@ -28,9 +29,3 @@ For example, if you want to install version 0.2 from the git repository
 you have to do::
 
     $ pip install -e git+https://github.com/eriol/pypel/@0.2#egg=pypel
-
-Manual installation
--------------------
-
-You can download packaged version from http://downloads.mornie.org/pypel
-and and use Python's ``distutils`` to install.
