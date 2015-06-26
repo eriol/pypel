@@ -40,7 +40,7 @@ distutils.core.setup(
     description = 'simple tool to manage receipts',
     long_description = read('README.rst'),
     classifiers = classifiers,
-    url = 'http://mornie.org/projects/pypel/',
+    url = 'https://mornie.org/projects/pypel/',
     author = 'Daniele Tricoli',
     author_email = 'eriol@mornie.org',
     packages = ['pypel'],
