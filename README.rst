@@ -9,3 +9,7 @@ inside receipts so you can share them in a very easy way.
 
 For more info see the documentation in the ``docs`` directory or browse it
 online on `pypel.rtfd.org <http://pypel.rtfd.org/>`_.
+
+* Code: `https://github.com/eriol/pypel <https://github.com/eriol/pypel>`_
+* Bug reports: `https://github.com/eriol/pypel/issues <https://github.com/eriol/pypel/issues>`
+* License: BSD 3-Clause
