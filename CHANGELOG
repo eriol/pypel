@@ -1,19 +1,19 @@
 Release 0.3 (in development)
 ============================
 
-* Added Python3 support
-* Switched to GExiv2
-* Switched to Pillow for testing
+* Add Python3 support.
+* Switch to GExiv2 for XMP metadata management.
+* Switch to Pillow for testing.
 
 Release 0.2 (September 12, 2013)
 ================================
 
-* Refactored Receipt class to use a class based model
-* Added note field
-* Enhanced version handling
+* Refactor Receipt class to use a class based model.
+* Add note field to Receipt model.
+* Enhance version handling.
 
-  - Added __version_info__ tuple and switched to __version__
-    for human readable form
+  - Add __version_info__ tuple and switch to __version__
+    for human readable form.
 
 Release 0.1 (November 02, 2012)
 ===============================
