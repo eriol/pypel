@@ -22,17 +22,12 @@ Simply install ``pypel`` using ``pip``::
 
     $ pip install pypel
 
-Alternatively you can directly install from a packaged version or from the
-mercurial repository using ``pip``.
+Alternatively you can directly install from the git repository using ``pip``.
 
 For example, if you want to install version 0.2 from the git repository
 you have to do::
 
     $ pip install -e git+https://github.com/eriol/pypel/@0.2#egg=pypel
-
-Or from the packaged version::
-
-    $ pip install http//downloads.mornie.org/pypel/pypel-0.2.tar.gz
 
 Manual installation
 -------------------
