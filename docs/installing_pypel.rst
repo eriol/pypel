@@ -25,7 +25,7 @@ Simply install ``pypel`` using ``pip``::
 
 Alternatively you can directly install from the git repository using ``pip``.
 
-For example, if you want to install version 0.2 from the git repository
+For example, if you want to install version 0.3 from the git repository
 you have to do::
 
-    $ pip install -e git+https://github.com/eriol/pypel/@0.2#egg=pypel
+    $ pip install -e git+https://github.com/eriol/pypel/@0.3#egg=pypel

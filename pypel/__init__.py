@@ -7,7 +7,7 @@ Copyright (c) 2012-2015 Daniele Tricoli <eriol@mornie.org>
 Read LICENSE for more informations.
 """
 
-__version_info__ = (0, 3, 0, 'alpha', 0)
+__version_info__ = (0, 3, 0, 'final', 0)
 
 
 def get_version():
