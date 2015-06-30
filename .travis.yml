@@ -1,0 +1,11 @@
+language: python
+python:
+- "2.7"
+- "3.4"
+before_install:
+- sudo apt-get update
+- sudo apt-get install -y python-gi python3-gi
+install:
+- pip install pillow nose
+- pip install .
+script: nosetests
