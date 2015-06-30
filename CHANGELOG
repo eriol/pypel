@@ -1,5 +1,8 @@
-Release 0.3 (June 26, 2015)
+Release 0.4 (in development)
 ============================
+
+Release 0.3 (June 26, 2015)
+===========================
 
 * Add Python3 support.
 * Switch to GExiv2 for XMP metadata management.
