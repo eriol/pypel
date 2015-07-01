@@ -1,7 +1,9 @@
 language: python
+# GExiv2 is not pip-installable and Travis use Ubuntu Precise, so only
+# Python 2.7 and 3.2 can use system site packages.
 python:
-- "2.7"
-- "3.4"
+- "2.7_with_system_site_packages"
+- "3.2_with_system_site_packages"
 before_install:
 - sudo apt-get update
 - sudo apt-get install -y libgexiv2-1 python-gi python3-gi
@@ -13,5 +15,3 @@ cache:
 - apt
 - directories:
   - $HOME/.cache/pip
-virtualenv:
-  system_site_packages: true
