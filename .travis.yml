@@ -4,7 +4,7 @@ python:
 - "3.4"
 before_install:
 - sudo apt-get update
-- sudo apt-get install -y libgexiv2-2 python-gi python3-gi
+- sudo apt-get install -y libgexiv2-1 python-gi python3-gi
 install:
 - pip install coverage pillow nose six
 - pip install .
