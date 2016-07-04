@@ -1,7 +1,7 @@
 pypel
 =====
 
-``pypel`` is a simple tool to manage receipts. It uses XMP to store metatada
+``pypel`` is a simple tool to manage receipts. It uses XMP to store metadata
 inside receipts so you can share them in a very easy way.
 
 **IMPORTANT**: pypel >=0.3 use GExiv2, pyexiv2 is not used anymore.
